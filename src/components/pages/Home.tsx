@@ -24,18 +24,7 @@ import HeroBackground from '../HeroBackground'
 import SectionBadge from '../SectionBadge'
 import TextRollButton from '../TextRollButton'
 
-function PartnerBadgeIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      className="h-5 w-5 fill-current text-[#1fb6e8] sm:h-6 sm:w-6"
-      aria-hidden="true"
-    >
-      <path d="m19.6 66.5 19.7-11 .3-1-.3-.5h-1l-3.3-.2-11.2-.3L14 53l-9.5-.5-2.4-.5L0 49l.2-1.5 2-1.3 2.9.2 6.3.5 9.5.6 6.9.4L38 49.1h1.6l.2-.7-.5-.4-.4-.4L29 41l-10.6-7-5.6-4.1-3-2-1.5-2-.6-4.2 2.7-3 3.7.3.9.2 3.7 2.9 8 6.1L37 36l1.5 1.2.6-.4.1-.3-.7-1.1L33 25l-6-10.4-2.7-4.3-.7-2.6c-.3-1-.4-2-.4-3l3-4.2L28 0l4.2.6L33.8 2l2.6 6 4.1 9.3L47 29.9l2 3.8 1 3.4.3 1h.7v-.5l.5-7.2 1-8.7 1-11.2.3-3.2 1.6-3.8 3-2L61 2.6l2 2.9-.3 1.8-1.1 7.7L59 27.1l-1.5 8.2h.9l1-1.1 4.1-5.4 6.9-8.6 3-3.5L77 13l2.3-1.8h4.3l3.1 4.7-1.4 4.9-4.4 5.6-3.7 4.7-5.3 7.1-3.2 5.7.3.4h.7l12-2.6 6.4-1.1 7.6-1.3 3.5 1.6.4 1.6-1.4 3.4-8.2 2-9.6 2-14.3 3.3-.2.1.2.3 6.4.6 2.8.2h6.8l12.6 1 3.3 2 1.9 2.7-.3 2-5.1 2.6-6.8-1.6-16-3.8-5.4-1.3h-.8v.4l4.6 4.5 8.3 7.5L89 80.1l.5 2.4-1.3 2-1.4-.2-9.2-7-3.6-3-8-6.8h-.5v.7l1.8 2.7 9.8 14.7.5 4.5-.7 1.4-2.6 1-2.7-.6-5.8-8-6-9-4.7-8.2-.5.4-2.9 30.2-1.3 1.5-3 1.2-2.5-2-1.4-3 1.4-6.2 1.6-8 1.3-6.4 1.2-7.9.7-2.6v-.2H49L43 72l-9 12.3-7.2 7.6-1.7.7-3-1.5.3-2.8L24 86l10-12.8 6-7.9 4-4.6-.1-.5h-.3L17.2 77.4l-4.7.6-2-2 .2-3 1-1 8-5.5Z" />
-    </svg>
-  )
-}
+
 
 function ClientCard({
   name,
@@ -182,11 +171,11 @@ function Home() {
         <HeroBackground />
         <div className="flex-1" />
         <div className="relative z-20 mx-auto w-full max-w-[1440px] px-5 pb-14 sm:px-8 sm:pb-16 lg:px-12 lg:pb-20">
-          <p className="mb-5 text-[13px] tracking-wide text-gray-900 sm:mb-8 sm:text-sm">
+          <p className="mb-5 tracking-wide text-white sm:mb-8 text-2xl font-bold font-serif">
             GravityTech Software
           </p>
 
-          <h1 className="max-w-5xl text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-gray-900 sm:text-[clamp(2.5rem,5vw,4.2rem)]">
+          <h1 className="max-w-5xl text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-amber-50 sm:text-[clamp(2.5rem,5vw,4.2rem)]">
             We engineer software
             <span className="sm:hidden"> </span>
             <br className="hidden sm:block" />
@@ -199,24 +188,16 @@ function Home() {
           <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:items-center sm:gap-5">
             <TextRollButton label="Start a Project" href="/careers#apply" variant="primary" />
 
-            <div className="inline-flex w-fit items-center gap-2 rounded-[4px] bg-white px-3 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-shadow duration-300 hover:shadow-[0_4px_16px_rgba(0,0,0,0.12)] sm:gap-3 sm:px-4">
-              <PartnerBadgeIcon />
-              <span className="text-[13px] font-medium text-gray-900 sm:text-sm">
-                Trusted Partner
-              </span>
-              <span className="rounded bg-gray-900 px-1.5 py-0.5 text-[10px] text-white sm:px-2 sm:text-[11px]">
-                Verified
-              </span>
-            </div>
+            
           </div>
         </div>
       </section>
 
-      <section className="overflow-hidden bg-white pb-12 pt-16 sm:pb-16 sm:pt-20 lg:pb-24 lg:pt-32">
+      <section className="overflow-hidden  bg-[linear-gradient(150deg,rgba(34,184,195,1)_0%,rgba(230,230,230,1)_72%)] pb-12 pt-16 sm:pb-16 sm:pt-20 lg:pb-24 lg:pt-32">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-6 px-5 sm:mb-8 sm:px-8 lg:px-12">
+         {/*  <div className="mb-6 px-5 sm:mb-8 sm:px-8 lg:px-12">
             <SectionBadge number="1" label="Our Clients" />
-          </div>
+          </div> */}
 
           <h2 className="mb-12 px-5 text-[clamp(1.5rem,4vw,3.2rem)] font-medium leading-[1.12] tracking-[-0.02em] text-gray-900 sm:mb-16 sm:px-8 lg:mb-28 lg:px-12">
             Trusted by software,
@@ -270,82 +251,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="bg-[#F5F5F5] pb-16 pt-16 sm:pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="mb-6 px-5 sm:mb-8 sm:px-8 lg:px-12">
-            <SectionBadge number="2" label="What we deliver" borderClassName="border-gray-300" />
-          </div>
-
-          <h2 className="mb-10 px-5 text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-gray-900 sm:mb-14 sm:px-8 sm:text-[clamp(2.5rem,5vw,4.2rem)] lg:mb-16 lg:px-12">
-            Our services
-          </h2>
-
-          <div className="grid grid-cols-1 gap-5 px-5 sm:gap-6 sm:px-8 md:grid-cols-2 lg:gap-7 lg:px-12">
-            {HOME_SERVICES.map((service) => (
-              <ServiceCard key={service.id} {...service} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <AnimatedSection className="bg-[#0f0f0f] px-8 py-24 sm:px-16">
-        <div className="mx-auto max-w-[1440px]">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-end">
-            <h2 className="text-3xl font-semibold text-white sm:text-4xl">
-              AI is not our product.
-              <span className="block text-[#1fb6e8]">It&apos;s how we work.</span>
-            </h2>
-            <div className="max-w-sm justify-self-end">
-              <p className="text-sm leading-relaxed text-gray-500">
-                Every team at GravityTech uses AI to move faster, catch errors earlier, and deliver
-                more reliable software — from first line of code to final handoff.
-              </p>
-              <span className="ml-auto mt-2 block h-1.5 w-1.5 rounded-full bg-[#1fb6e8]" />
-            </div>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {[
-              {
-                icon: Code2,
-                title: 'AI-Assisted Code Review',
-                desc: 'Every pull request runs through AI checks for logic errors, security vulnerabilities, and coding standards — before a human reviews it. This cuts review cycles by half.',
-              },
-              {
-                icon: BrainCircuit,
-                title: 'Intelligent Test Generation',
-                desc: 'Our QA team uses AI to auto-generate test cases from user stories. Coverage gaps are detected before sprint ends, not after deployment.',
-              },
-              {
-                icon: Workflow,
-                title: 'AI-Powered Project Scoping',
-                desc: 'We feed requirements into AI tools to generate effort estimates, identify risk areas, and flag ambiguous specs — reducing scope creep by 40% across projects.',
-              },
-              {
-                icon: BarChart3,
-                title: 'Delivery Analytics & Prediction',
-                desc: 'AI models track sprint velocity, blockers, and commit patterns to predict delivery dates with 85% accuracy — giving clients real visibility into their project.',
-              },
-            ].map((item) => {
-              const Icon = item.icon
-              return (
-                <article
-                  key={item.title}
-                  className="group rounded-2xl border border-gray-800/60 bg-[#141414] p-7 transition-all duration-300 hover:border-[#1fb6e8]/30"
-                >
-                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-[#1fb6e8]/10 transition-colors group-hover:bg-[#1fb6e8]/20">
-                    <Icon size={18} className="text-[#1fb6e8]" />
-                  </div>
-                  <h3 className="mb-3 text-base font-semibold text-white">{item.title}</h3>
-                  <p className="text-sm leading-relaxed text-gray-500">{item.desc}</p>
-                </article>
-              )
-            })}
-          </div>
-        </div>
-      </AnimatedSection>
-
-      <AnimatedSection className="bg-[#111111] px-8 py-24 sm:px-16">
+      <AnimatedSection className="bg-[radial-gradient(circle,rgba(2,0,36,1)_0%,rgba(10,10,120,1)_100%)] px-8 py-24 sm:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start">
             <h2 className="text-3xl font-semibold text-white sm:text-4xl">Why Choose Us</h2>
@@ -455,6 +361,83 @@ function Home() {
           </div>
         </div>
       </AnimatedSection>
+
+      <section className="bg-[#F5F5F5] pb-16 pt-16 sm:pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-6 px-5 sm:mb-8 sm:px-8 lg:px-12">
+            <SectionBadge number="😊" label="What we deliver" borderClassName="border-gray-300" />
+          </div>
+
+          <h2 className="mb-10 px-5 text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-gray-900 sm:mb-14 sm:px-8 sm:text-[clamp(2.5rem,5vw,4.2rem)] lg:mb-16 lg:px-12">
+            Our services
+          </h2>
+
+          <div className="grid grid-cols-1 gap-5 px-5 sm:gap-6 sm:px-8 md:grid-cols-2 lg:gap-7 lg:px-12">
+            {HOME_SERVICES.map((service) => (
+              <ServiceCard key={service.id} {...service} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <AnimatedSection className="bg-[#0f0f0f] px-8 py-24 sm:px-16">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-end">
+            <h2 className="text-3xl font-semibold text-white sm:text-4xl">
+              AI is not our product.
+              <span className="block text-[#1fb6e8]">It&apos;s how we work.</span>
+            </h2>
+            <div className="max-w-sm justify-self-end">
+              <p className="text-sm leading-relaxed text-gray-500">
+                Every team at GravityTech uses AI to move faster, catch errors earlier, and deliver
+                more reliable software — from first line of code to final handoff.
+              </p>
+              <span className="ml-auto mt-2 block h-1.5 w-1.5 rounded-full bg-[#1fb6e8]" />
+            </div>
+          </div>
+
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {[
+              {
+                icon: Code2,
+                title: 'AI-Assisted Code Review',
+                desc: 'Every pull request runs through AI checks for logic errors, security vulnerabilities, and coding standards — before a human reviews it. This cuts review cycles by half.',
+              },
+              {
+                icon: BrainCircuit,
+                title: 'Intelligent Test Generation',
+                desc: 'Our QA team uses AI to auto-generate test cases from user stories. Coverage gaps are detected before sprint ends, not after deployment.',
+              },
+              {
+                icon: Workflow,
+                title: 'AI-Powered Project Scoping',
+                desc: 'We feed requirements into AI tools to generate effort estimates, identify risk areas, and flag ambiguous specs — reducing scope creep by 40% across projects.',
+              },
+              {
+                icon: BarChart3,
+                title: 'Delivery Analytics & Prediction',
+                desc: 'AI models track sprint velocity, blockers, and commit patterns to predict delivery dates with 85% accuracy — giving clients real visibility into their project.',
+              },
+            ].map((item) => {
+              const Icon = item.icon
+              return (
+                <article
+                  key={item.title}
+                  className="group rounded-2xl border border-gray-800/60 bg-[#141414] p-7 transition-all duration-300 hover:border-[#1fb6e8]/30"
+                >
+                  <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-[#1fb6e8]/10 transition-colors group-hover:bg-[#1fb6e8]/20">
+                    <Icon size={18} className="text-[#1fb6e8]" />
+                  </div>
+                  <h3 className="mb-3 text-base font-semibold text-white">{item.title}</h3>
+                  <p className="text-sm leading-relaxed text-gray-500">{item.desc}</p>
+                </article>
+              )
+            })}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      
 
       <AnimatedSection
         className="px-8 py-24 sm:px-16"

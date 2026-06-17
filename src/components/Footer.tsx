@@ -1,16 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const offices = [
-  { flag: '🇺🇸', city: 'Delaware', country: 'USA' },
-  { flag: '🇦🇪', city: 'Dubai', country: 'UAE' },
-  { flag: '🇮🇳', city: 'Pune', country: 'India' },
-]
 
-const mapMarkers = [
-  { name: 'Delaware, USA', x: '22%', y: '38%', color: '#f59e0b' },
-  { name: 'Dubai, UAE', x: '61%', y: '46%', color: '#ec4899' },
-  { name: 'Pune, India', x: '73%', y: '52%', color: '#1fb6e8' },
-]
 
 const footerLinks = {
   pages: [
@@ -47,58 +37,8 @@ const footerLinks = {
 function Footer() {
   return (
     <footer>
-      <div className="bg-[#111111] px-8 py-16 sm:px-16">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 lg:grid-cols-[35%_65%]">
-          <div>
-            {offices.map((office) => (
-              <div
-                key={office.city}
-                className="mb-3 rounded-2xl border border-gray-800/50 bg-[#1a1a1a] p-6 transition-colors duration-200 hover:border-gray-700"
-              >
-                <span className="mb-3 block text-2xl">{office.flag}</span>
-                <p className="text-lg font-semibold text-white">{office.city}</p>
-                <p className="mt-0.5 text-sm text-gray-500">{office.country}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative w-full min-h-[400px]">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
-              alt="Dotted world map"
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover opacity-30"
-              style={{
-                filter: 'opacity(0.25) contrast(0.8) brightness(0) invert(1)',
-                maskImage: 'radial-gradient(ellipse at center, black 60%, transparent 90%)',
-                WebkitMaskImage: 'radial-gradient(ellipse at center, black 60%, transparent 90%)',
-              }}
-            />
-
-            {mapMarkers.map((office) => (
-              <div
-                key={office.name}
-                className="group absolute -translate-x-1/2 -translate-y-1/2"
-                style={{ left: office.x, top: office.y }}
-              >
-                <span
-                  className="absolute inline-flex h-4 w-4 rounded-full opacity-40 animate-ping"
-                  style={{ background: office.color }}
-                />
-                <span
-                  className="relative inline-flex h-3 w-3 rounded-full"
-                  style={{ background: office.color }}
-                />
-                <div className="absolute left-4 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-lg border border-gray-800 bg-[#1a1a1a] px-2 py-1 group-hover:block">
-                  <p className="text-xs font-medium text-white">{office.name}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-[#0a0a0a] px-8 pb-8 pt-16 sm:px-16">
+      
+      <div className="bg-[linear-gradient(63deg,rgba(2,0,36,1)_0%,rgba(82,4,12,1)_96%)] px-8 pb-8 pt-16 sm:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-12">
             <div className="mb-3 flex items-center gap-2">

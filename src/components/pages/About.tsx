@@ -27,11 +27,11 @@ function About() {
   return (
     <main>
       <PageHero>
-        <p className="mb-5 text-[13px] tracking-wide text-gray-900 sm:mb-8 sm:text-sm">
+        <p className="mb-5 tracking-wide text-white sm:mb-8 text-2xl font-bold font-serif">
           GravityTech Software
         </p>
 
-        <h1 className="max-w-5xl text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-gray-900 sm:text-[clamp(2.5rem,5vw,4.2rem)]">
+        <h1 className="max-w-5xl text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-amber-50 sm:text-[clamp(2.5rem,5vw,4.2rem)]">
           We engineer what&apos;s
           <span className="sm:hidden"> </span>
           <br className="hidden sm:block" />

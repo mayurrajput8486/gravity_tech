@@ -10,7 +10,7 @@ function HeroBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
       <Shader className="h-full w-full" style={{ width: '100%', height: '100%' }}>
-        <Swirl colorA="#ffffff" colorB="#f0f0f0" detail={1.7} />
+        <Swirl colorA="#09196b" colorB="#5e0808" detail={1.7} />
         <ChromaFlow
           baseColor="#ffffff"
           downColor="#1fb6e8"
