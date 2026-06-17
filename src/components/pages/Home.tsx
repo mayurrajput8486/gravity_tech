@@ -176,7 +176,7 @@ function Home() {
           </p>
 
           <h1 className="max-w-5xl text-[clamp(1.75rem,7vw,4.2rem)] font-medium leading-[1.08] tracking-[-0.03em] text-amber-50 sm:text-[clamp(2.5rem,5vw,4.2rem)]">
-            We engineer software
+            We Engineer Software
             <span className="sm:hidden"> </span>
             <br className="hidden sm:block" />
             that drives enterprise
