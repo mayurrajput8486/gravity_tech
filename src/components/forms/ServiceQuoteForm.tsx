@@ -448,14 +448,14 @@ function ServiceQuoteForm() {
                   <div className="relative">
                     <Mail
                       size={15}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 "
                     />
                     <input
                       type="email"
                       placeholder="rahul@yourcompany.com"
                       value={data.companyEmail}
                       onChange={(e) => update('companyEmail', e.target.value)}
-                      className={`${inputClass(!!errors.companyEmail)} pl-9`}
+                      className={`${inputClass(!!errors.companyEmail)} pl-10`}
                     />
                   </div>
                   {errors.companyEmail && <ErrorMsg msg={errors.companyEmail} />}
