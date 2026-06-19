@@ -44,11 +44,8 @@ export const NAV_ITEMS = [
 ] as const
 
 export const CLIENTS = [
-  { name: 'YouGet Software Solution', category: 'Software Solutions', color: '#3b82f6', initials: 'YG' },
   { name: 'IntactBox Systems', category: 'Enterprise Systems', color: '#8b5cf6', initials: 'IB' },
   { name: 'Appligo Technosoft', category: 'Technology Services', color: '#3b82f6', initials: 'AT' },
-  { name: 'Mauli Project Management', category: 'Project Management', color: '#ef4444', initials: 'MP' },
-  { name: 'Guru Software Solutions', category: 'Software Consulting', color: '#3b82f6', initials: 'GS' },
   { name: 'Inbatoz Consultancy', category: 'Business Consultancy', color: '#3b82f6', initials: 'IC' },
   { name: 'Incub8 Engineering', category: 'Engineering', color: '#3b82f6', initials: 'I8' },
   { name: 'Webforge Technology', category: 'Web Technology', color: '#10b981', initials: 'WF' },
@@ -58,8 +55,11 @@ export const CLIENTS = [
   { name: 'Agastya Athyasika', category: 'Education', color: '#ef4444', initials: 'AA' },
   { name: 'Sarathi Study Center', category: 'Education', color: '#3b82f6', initials: 'SS' },
   { name: 'Terra Forge Infra', category: 'Infrastructure', color: '#6b7280', initials: 'TF' },
-  { name: 'NimbusCare', category: 'Healthcare Tech', color: '#06b6d4', initials: 'NC' },
-  { name: 'FinEdge Solutions', category: 'Fintech', color: '#0ea5e9', initials: 'FE' },
+  { name: 'Hotel Chote Sawkar', category: 'Restaurant', color: '#0ea5e9', initials: 'CS' },
+  { name: 'Hotel Gurukrupa', category: 'Restaurant', color: '#0ea5e9', initials: 'HG' },
+  { name: 'Hanuman Rasoi', category: 'Restaurant', color: '#0ea5e9', initials: 'HR' },
+  { name: 'Tanushri Suryashakti Enterprises', category: 'Engineering', color: '#0ea5e9', initials: 'TS' },
+  
 ] as const
 
 export const HOME_SERVICES = [

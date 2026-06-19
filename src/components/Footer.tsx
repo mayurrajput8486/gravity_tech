@@ -17,34 +17,28 @@ const footerLinks = {
     { label: "SCIP Program", to: "/careers#scip" },
   ],
   social: [
-    { label: "LinkedIn", href: "https://linkedin.com" },
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "YouTube", href: "https://youtube.com" },
-    { label: "Facebook", href: "https://facebook.com" },
-    { label: "Twitter / X", href: "https://x.com" },
-  ],
-  media: [
-    { label: "YourStory", href: "https://yourstory.com" },
-    { label: "Economic Times", href: "https://economictimes.indiatimes.com" },
-    { label: "Express Computers", href: "https://www.expresscomputer.in" },
-    { label: "Inc42", href: "https://inc42.com" },
-    { label: "CIOL", href: "https://www.ciol.com" },
-  ],
+    { label: "LinkedIn", href: "#" },
+    { label: "Instagram", href: "https://www.instagram.com/gravitytechsoftware" },
+    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61590807268206" },
+  ]
 };
 
 function Footer() {
   return (
     <footer>
-      <div className="bg-[linear-gradient(63deg,rgba(2,0,36,1)_0%,rgba(82,4,12,1)_96%)] px-8 pb-8 pt-16 sm:px-16">
+      <div className="bg-[linear-gradient(169deg,_#851010_0%,_#220404_0%)] px-8 pb-8 pt-16 sm:px-16">
         <div className="flex justify-between max-w-[1440px]">
           <div className="mb-12">
             <div className="mb-3 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1fb6e8] text-xs font-bold text-white">
+              {/* <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1fb6e8] text-xs font-bold text-white">
                 GT
               </div>
               <span className="text-lg font-bold tracking-tight text-white">
                 GravityTech
-              </span>
+              </span> */}
+              <div>
+                <img src='/GravityTech_footer.svg' alt="GravityTech Software" width="350px"/>
+              </div>
             </div>
             <p className="text-sm text-gray-500">Quality Today. Better Software Tomorrow !!!</p>
             <p className="mt-3 text-xs text-gray-600">

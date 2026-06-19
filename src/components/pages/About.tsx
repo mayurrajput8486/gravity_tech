@@ -1,26 +1,104 @@
-import { ArrowRight, Code2, Shield, TrendingUp } from 'lucide-react'
+import { ArrowRight, Check, Code2, ExternalLink, Shield, TrendingUp } from 'lucide-react'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import PageHero from '../PageHero'
 import TextRollButton from '../TextRollButton'
 import AnimatedSection from '../AnimatedSection'
+import TermsModal from '../modals/TermsModal'
+import PrivacyModal from '../modals/PrivacyModal'
 import {
   BUILD_DIFFERENTLY,
   GRADIENT_LIGHT,
   GRADIENT_LIGHT_SHORT,
-  MAP_OFFICES,
   TEAM_MEMBERS,
   TECH_STACK,
 } from '../../constants/data'
 
 const ABOUT_STATS = ['50+ Products', '30+ Engineers', '3 Offices', '100% Live Projects']
 
+interface EnquiryFormData {
+  firstName: string
+  companyEmail: string
+  designation: string
+  phone: string
+  requirements: string
+}
+
+const INITIAL_FORM_DATA: EnquiryFormData = {
+  firstName: '',
+  companyEmail: '',
+  designation: '',
+  phone: '',
+  requirements: '',
+}
+
 function About() {
-  const [activeTab, setActiveTab] = useState<'business' | 'other'>('business')
+  const [formData, setFormData] = useState<EnquiryFormData>(INITIAL_FORM_DATA)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
+  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
+  const [hasReadTerms, setHasReadTerms] = useState(false)
+  const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
+  const [termsModalOpen, setTermsModalOpen] = useState(false)
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const updateField = (key: keyof EnquiryFormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }))
+    setErrors((prev) => {
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
+  }
+
+  const inputClass = (field: keyof EnquiryFormData) =>
+    `w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition-all duration-200 ${
+      errors[field]
+        ? 'border-red-400 focus:border-red-400 focus:ring-2 focus:ring-red-400/10'
+        : 'border-gray-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10'
+    }`
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required'
+    }
+
+    if (!formData.companyEmail.trim()) {
+      newErrors.companyEmail = 'Company email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.companyEmail)) {
+      newErrors.companyEmail = 'Enter a valid email address'
+    }
+
+    if (!formData.requirements.trim()) {
+      newErrors.requirements = 'Please describe your requirements'
+    }
+
+    if (formData.phone.trim() && !/^[+]?[\d\s\-()]{8,15}$/.test(formData.phone.trim())) {
+      newErrors.phone = 'Enter a valid phone number'
+    }
+
+    if (!agreeToTerms) {
+      newErrors.agreeToTerms = hasReadTerms
+        ? 'Please check the box to agree to the Terms & Conditions'
+        : 'Please read and agree to the Terms & Conditions'
+    }
+
+    if (!agreeToPrivacy) {
+      newErrors.agreeToPrivacy = hasReadPrivacy
+        ? 'Please check the box to agree to the Privacy Policy'
+        : 'Please read and agree to the Privacy Policy'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (!validateForm()) return
     setFormSubmitted(true)
   }
 
@@ -401,28 +479,7 @@ function About() {
             </div>
 
             <div>
-              <div className="mb-6 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('business')}
-                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                    activeTab === 'business'
-                      ? 'bg-[#1fb6e8] text-white'
-                      : 'text-gray-500'
-                  }`}
-                >
-                  Business Enquiry
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('other')}
-                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                    activeTab === 'other' ? 'bg-[#1fb6e8] text-white' : 'text-gray-500'
-                  }`}
-                >
-                  Other Enquiry
-                </button>
-              </div>
+              <h2 className="mb-6 text-2xl font-semibold text-gray-900">Business Enquiry</h2>
 
               {formSubmitted ? (
                 <div className="rounded-2xl border border-gray-100 bg-white p-8 text-center">
@@ -432,51 +489,161 @@ function About() {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleFormSubmit} className="space-y-4">
+                <form onSubmit={handleFormSubmit} noValidate className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      required
-                      placeholder="First Name"
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10"
-                    />
-                    <input
-                      type="email"
-                      required
-                      placeholder="Company Email"
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10"
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={(e) => updateField('firstName', e.target.value)}
+                        className={inputClass('firstName')}
+                      />
+                      {errors.firstName && (
+                        <p className="mt-1.5 text-xs text-red-500">{errors.firstName}</p>
+                      )}
+                    </div>
+                    <div>
+                      <input
+                        type="email"
+                        placeholder="Company Email"
+                        value={formData.companyEmail}
+                        onChange={(e) => updateField('companyEmail', e.target.value)}
+                        className={inputClass('companyEmail')}
+                      />
+                      {errors.companyEmail && (
+                        <p className="mt-1.5 text-xs text-red-500">{errors.companyEmail}</p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      placeholder="Designation / Position"
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Phone Number (Optional)"
-                      className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10"
-                    />
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Designation / Position"
+                        value={formData.designation}
+                        onChange={(e) => updateField('designation', e.target.value)}
+                        className={inputClass('designation')}
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        placeholder="Phone Number (Optional)"
+                        value={formData.phone}
+                        onChange={(e) => updateField('phone', e.target.value)}
+                        className={inputClass('phone')}
+                      />
+                      {errors.phone && (
+                        <p className="mt-1.5 text-xs text-red-500">{errors.phone}</p>
+                      )}
+                    </div>
                   </div>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Describe your requirements..."
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm outline-none transition-all duration-200 focus:border-[#1fb6e8] focus:ring-2 focus:ring-[#1fb6e8]/10"
-                  />
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" required className="rounded" />
-                      I agree to{' '}
-                      <span className="text-[#1fb6e8] underline">GravityTech&apos;s Terms</span>
-                    </label>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" required className="rounded" />
-                      I agree to{' '}
-                      <span className="text-[#1fb6e8] underline">Privacy Policy</span>
-                    </label>
+                  <div>
+                    <textarea
+                      rows={4}
+                      placeholder="Describe your requirements..."
+                      value={formData.requirements}
+                      onChange={(e) => updateField('requirements', e.target.value)}
+                      className={inputClass('requirements')}
+                    />
+                    {errors.requirements && (
+                      <p className="mt-1.5 text-xs text-red-500">{errors.requirements}</p>
+                    )}
                   </div>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="flex items-start gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!hasReadTerms) {
+                              setTermsModalOpen(true)
+                            } else {
+                              setAgreeToTerms((v) => !v)
+                            }
+                          }}
+                          className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                            agreeToTerms
+                              ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                              : hasReadTerms
+                                ? 'cursor-pointer border-gray-300 hover:border-[#1fb6e8]'
+                                : 'cursor-pointer border-gray-200 bg-gray-50'
+                          }`}
+                        >
+                          {agreeToTerms && (
+                            <Check size={12} className="text-white" strokeWidth={3} />
+                          )}
+                        </button>
+                        <span className="text-sm leading-relaxed text-gray-600">
+                          I agree to GravityTech&apos;s{' '}
+                          <button
+                            type="button"
+                            onClick={() => setTermsModalOpen(true)}
+                            className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
+                          >
+                            Terms & Conditions
+                            <ExternalLink size={11} />
+                          </button>
+                          {!hasReadTerms && (
+                            <span className="mt-1 block text-xs text-amber-600">
+                              Please open and read the full document to enable this checkbox
+                            </span>
+                          )}
+                        </span>
+                      </label>
+                      {errors.agreeToTerms && (
+                        <p className="ml-8 mt-1.5 text-xs text-red-500">{errors.agreeToTerms}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="flex items-start gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!hasReadPrivacy) {
+                              setPrivacyModalOpen(true)
+                            } else {
+                              setAgreeToPrivacy((v) => !v)
+                            }
+                          }}
+                          className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                            agreeToPrivacy
+                              ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                              : hasReadPrivacy
+                                ? 'cursor-pointer border-gray-300 hover:border-[#1fb6e8]'
+                                : 'cursor-pointer border-gray-200 bg-gray-50'
+                          }`}
+                        >
+                          {agreeToPrivacy && (
+                            <Check size={12} className="text-white" strokeWidth={3} />
+                          )}
+                        </button>
+                        <span className="text-sm leading-relaxed text-gray-600">
+                          I agree to GravityTech&apos;s{' '}
+                          <button
+                            type="button"
+                            onClick={() => setPrivacyModalOpen(true)}
+                            className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
+                          >
+                            Privacy Policy
+                            <ExternalLink size={11} />
+                          </button>
+                          {!hasReadPrivacy && (
+                            <span className="mt-1 block text-xs text-amber-600">
+                              Please open and read the full document to enable this checkbox
+                            </span>
+                          )}
+                        </span>
+                      </label>
+                      {errors.agreeToPrivacy && (
+                        <p className="ml-8 mt-1.5 text-xs text-red-500">{errors.agreeToPrivacy}</p>
+                      )}
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
                     className="w-full rounded-xl bg-gray-900 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
@@ -485,56 +652,24 @@ function About() {
                   </button>
                 </form>
               )}
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Section 10: Offices */}
-      <section className="bg-[#0f0f0f] py-16 sm:py-20 lg:py-28">
-        <div className="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
-          <h2 className="mb-12 text-3xl font-semibold text-white">Our Offices</h2>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <div>
-              {MAP_OFFICES.map((office) => (
-                <div
-                  key={office.city}
-                  className="flex items-center gap-4 border-b border-gray-800 py-4 last:border-0"
-                >
-                  <span className="text-2xl">{office.flag}</span>
-                  <div>
-                    <p className="font-semibold text-white">{office.city}</p>
-                    <p className="text-sm text-gray-500">{office.country}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="relative h-48 overflow-hidden rounded-2xl border border-gray-800 bg-[#141414]">
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
-                  backgroundSize: '20px 20px',
+              <TermsModal
+                isOpen={termsModalOpen}
+                onClose={() => {
+                  setTermsModalOpen(false)
+                  setAgreeToTerms(true)
                 }}
+                onFullyRead={() => setHasReadTerms(true)}
               />
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/1280px-World_map_-_low_resolution.svg.png"
-                alt="World map"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover opacity-15"
+
+              <PrivacyModal
+                isOpen={privacyModalOpen}
+                onClose={() => {
+                  setPrivacyModalOpen(false)
+                  setAgreeToPrivacy(true)
+                }}
+                onFullyRead={() => setHasReadPrivacy(true)}
               />
-              {MAP_OFFICES.map((office) => (
-                <div
-                  key={office.city}
-                  className="absolute"
-                  style={{ left: office.x, top: office.y }}
-                >
-                  <span className="absolute inline-flex h-2.5 w-2.5 animate-ping rounded-full bg-[#1fb6e8] opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#1fb6e8]" />
-                </div>
-              ))}
             </div>
           </div>
         </div>
