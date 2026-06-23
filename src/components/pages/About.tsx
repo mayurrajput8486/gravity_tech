@@ -69,7 +69,7 @@ function About() {
     if (!formData.companyEmail.trim()) {
       newErrors.companyEmail = 'Company email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.companyEmail)) {
-      newErrors.companyEmail = 'Enter a valid email address'
+      newErrors.companyEmail = 'Please enter a valid email address'
     }
 
     if (!formData.requirements.trim()) {
@@ -319,7 +319,7 @@ function About() {
               </h3>
               <TextRollButton
                 label="Start a Project →"
-                href="/careers#apply"
+                href="/services#quote-form"
                 variant="white"
               />
             </div>
@@ -371,7 +371,7 @@ function About() {
             is where to start.
           </p>
           <div className="mt-8 flex justify-center">
-            <TextRollButton label="Learn About SCIP →" href="/careers#scip" variant="primary" />
+            <TextRollButton label="Learn About SCIP →" href="/careers/scip" variant="primary" />
           </div>
         </div>
       </AnimatedSection>

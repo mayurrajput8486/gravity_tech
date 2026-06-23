@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   Clock,
   Code2,
+  ExternalLink,
   Loader2,
   Lock,
   Mail,
@@ -18,6 +19,8 @@ import {
   Wallet,
 } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
+import TermsModal from '../modals/TermsModal'
+import PrivacyModal from '../modals/PrivacyModal'
 
 interface QuoteFormData {
   serviceType: string[]
@@ -57,16 +60,12 @@ const INITIAL_DATA: QuoteFormData = {
   preferredStartDate: '',
 }
 
-const PERSONAL_DOMAINS = [
-  'gmail.com',
-  'yahoo.com',
-  'hotmail.com',
-  'outlook.com',
-  'live.com',
-  'icloud.com',
-]
-
 const STEPS = ['Project Details', 'Contact Info', 'Requirements']
+
+interface AgreementState {
+  agreeToTerms: boolean
+  agreeToPrivacy: boolean
+}
 
 const labelClass =
   'block text-xs font-semibold uppercase tracking-wide text-gray-700 mb-2'
@@ -92,7 +91,11 @@ function ErrorMsg({ msg }: { msg: string }) {
   )
 }
 
-function validateStep(step: number, data: QuoteFormData): QuoteFormErrors {
+function validateStep(
+  step: number,
+  data: QuoteFormData,
+  agreements?: AgreementState
+): QuoteFormErrors {
   const errors: QuoteFormErrors = {}
 
   if (step === 0) {
@@ -106,12 +109,9 @@ function validateStep(step: number, data: QuoteFormData): QuoteFormErrors {
     if (!data.lastName.trim()) errors.lastName = 'Last name is required'
     if (!data.companyName.trim()) errors.companyName = 'Company name is required'
 
-    const emailDomain = data.companyEmail.split('@')[1]?.toLowerCase()
-    if (!data.companyEmail) errors.companyEmail = 'Company email is required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.companyEmail))
-      errors.companyEmail = 'Enter a valid email address'
-    else if (PERSONAL_DOMAINS.includes(emailDomain))
-      errors.companyEmail = 'Please use your work email address'
+    if (!data.companyEmail.trim()) errors.companyEmail = 'Email is required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.companyEmail.trim()))
+      errors.companyEmail = 'Please enter a valid email address'
 
     if (!data.phone.trim()) errors.phone = 'Phone number is required'
     else if (!/^[+]?[\d\s\-()]{8,15}$/.test(data.phone.trim()))
@@ -126,6 +126,13 @@ function validateStep(step: number, data: QuoteFormData): QuoteFormErrors {
     else if (data.projectDescription.trim().length < 50)
       errors.projectDescription = `Please add more detail (${50 - data.projectDescription.trim().length} more characters needed)`
     if (!data.preferredStartDate) errors.preferredStartDate = 'Please select a preferred start date'
+
+    if (agreements) {
+      if (!agreements.agreeToTerms)
+        errors.agreeToTerms = 'Please read and agree to Terms & Conditions'
+      if (!agreements.agreeToPrivacy)
+        errors.agreeToPrivacy = 'Please read and agree to the Privacy Policy'
+    }
   }
 
   return errors
@@ -191,6 +198,12 @@ function ServiceQuoteForm() {
   const [errors, setErrors] = useState<QuoteFormErrors>({})
   const [submitted, setSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
+  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
+  const [hasReadTerms, setHasReadTerms] = useState(false)
+  const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
+  const [termsModalOpen, setTermsModalOpen] = useState(false)
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
 
   const update = <K extends keyof QuoteFormData>(key: K, value: QuoteFormData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }))
@@ -220,7 +233,7 @@ function ServiceQuoteForm() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    const stepErrors = validateStep(2, data)
+    const stepErrors = validateStep(2, data, { agreeToTerms, agreeToPrivacy })
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors)
       return
@@ -234,12 +247,6 @@ function ServiceQuoteForm() {
     setCurrentStep(0)
     setErrors({})
   }
-
-  const isWorkEmailValid =
-    !errors.companyEmail &&
-    data.companyEmail.includes('@') &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.companyEmail) &&
-    !PERSONAL_DOMAINS.includes(data.companyEmail.split('@')[1]?.toLowerCase() ?? '')
 
   if (submitted) {
     return (
@@ -403,7 +410,6 @@ function ServiceQuoteForm() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Rahul"
                     value={data.firstName}
                     onChange={(e) => update('firstName', e.target.value)}
                     className={inputClass(!!errors.firstName)}
@@ -416,7 +422,6 @@ function ServiceQuoteForm() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Sharma"
                     value={data.lastName}
                     onChange={(e) => update('lastName', e.target.value)}
                     className={inputClass(!!errors.lastName)}
@@ -431,7 +436,6 @@ function ServiceQuoteForm() {
                 </label>
                 <input
                   type="text"
-                  placeholder="Acme Technologies Pvt Ltd"
                   value={data.companyName}
                   onChange={(e) => update('companyName', e.target.value)}
                   className={inputClass(!!errors.companyName)}
@@ -442,8 +446,7 @@ function ServiceQuoteForm() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className={labelClass}>
-                    Work Email <span className="text-red-500">*</span>
-                    <span className="ml-1 text-xs font-normal text-gray-400">(no personal emails)</span>
+                    Email Address <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Mail
@@ -452,18 +455,12 @@ function ServiceQuoteForm() {
                     />
                     <input
                       type="email"
-                      placeholder="rahul@yourcompany.com"
                       value={data.companyEmail}
                       onChange={(e) => update('companyEmail', e.target.value)}
                       className={`${inputClass(!!errors.companyEmail)} pl-10`}
                     />
                   </div>
                   {errors.companyEmail && <ErrorMsg msg={errors.companyEmail} />}
-                  {isWorkEmailValid && (
-                    <p className="mt-1 flex items-center gap-1 text-xs text-green-600">
-                      <CheckCircle2 size={11} /> Work email verified
-                    </p>
-                  )}
                 </div>
                 <div>
                   <label className={labelClass}>
@@ -476,7 +473,7 @@ function ServiceQuoteForm() {
                     />
                     <input
                       type="tel"
-                      placeholder="+91 98765 43210"
+                      placeholder="+91 XXXXX XXXXX"
                       value={data.phone}
                       onChange={(e) => update('phone', e.target.value)}
                       className={`${inputClass(!!errors.phone)} pl-9`}
@@ -493,7 +490,6 @@ function ServiceQuoteForm() {
                   </label>
                   <input
                     type="text"
-                    placeholder="CTO / Product Manager / Founder"
                     value={data.designation}
                     onChange={(e) => update('designation', e.target.value)}
                     className={inputClass(!!errors.designation)}
@@ -531,7 +527,6 @@ function ServiceQuoteForm() {
                 </label>
                 <textarea
                   rows={4}
-                  placeholder="We need a CRM platform that helps our sales team track leads, manage follow-ups, and generate pipeline reports automatically..."
                   value={data.projectDescription}
                   onChange={(e) => update('projectDescription', e.target.value)}
                   className={textareaClass(!!errors.projectDescription)}
@@ -556,7 +551,6 @@ function ServiceQuoteForm() {
                 <label className={labelClass}>Current Challenges (Optional)</label>
                 <textarea
                   rows={3}
-                  placeholder="Our current system is slow, data is siloed across spreadsheets, and the team spends too much time on manual reporting..."
                   value={data.currentChallenges}
                   onChange={(e) => update('currentChallenges', e.target.value)}
                   className={textareaClass(false)}
@@ -606,6 +600,84 @@ function ServiceQuoteForm() {
                 Your information is kept strictly confidential and will only be used to respond to
                 your enquiry. We do not sell or share client data.
               </p>
+
+              <div className="space-y-3 border-t border-gray-100 pt-5">
+                <div>
+                  <label className="flex items-start gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!hasReadTerms) setTermsModalOpen(true)
+                        else setAgreeToTerms((v) => !v)
+                      }}
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                        agreeToTerms
+                          ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                          : hasReadTerms
+                            ? 'cursor-pointer border-gray-300 hover:border-[#1fb6e8]'
+                            : 'cursor-pointer border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      {agreeToTerms && <Check size={12} className="text-white" strokeWidth={3} />}
+                    </button>
+                    <span className="text-sm leading-relaxed text-gray-600">
+                      I agree to GravityTech&apos;s{' '}
+                      <button
+                        type="button"
+                        onClick={() => setTermsModalOpen(true)}
+                        className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
+                      >
+                        Terms & Conditions
+                        <ExternalLink size={11} />
+                      </button>
+                      {!hasReadTerms && (
+                        <span className="mt-1 block text-xs text-amber-600">
+                          Please open and read the full document to enable this checkbox
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                  {errors.agreeToTerms && <ErrorMsg msg={errors.agreeToTerms} />}
+                </div>
+
+                <div>
+                  <label className="flex items-start gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!hasReadPrivacy) setPrivacyModalOpen(true)
+                        else setAgreeToPrivacy((v) => !v)
+                      }}
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                        agreeToPrivacy
+                          ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                          : hasReadPrivacy
+                            ? 'cursor-pointer border-gray-300 hover:border-[#1fb6e8]'
+                            : 'cursor-pointer border-gray-200 bg-gray-50'
+                      }`}
+                    >
+                      {agreeToPrivacy && <Check size={12} className="text-white" strokeWidth={3} />}
+                    </button>
+                    <span className="text-sm leading-relaxed text-gray-600">
+                      I agree to GravityTech&apos;s{' '}
+                      <button
+                        type="button"
+                        onClick={() => setPrivacyModalOpen(true)}
+                        className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
+                      >
+                        Privacy Policy
+                        <ExternalLink size={11} />
+                      </button>
+                      {!hasReadPrivacy && (
+                        <span className="mt-1 block text-xs text-amber-600">
+                          Please open and read the full document to enable this checkbox
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                  {errors.agreeToPrivacy && <ErrorMsg msg={errors.agreeToPrivacy} />}
+                </div>
+              </div>
             </div>
           )}
 
@@ -678,6 +750,23 @@ function ServiceQuoteForm() {
           </div>
         </form>
       </div>
+
+      <TermsModal
+        isOpen={termsModalOpen}
+        onClose={() => {
+          setTermsModalOpen(false)
+          setAgreeToTerms(true)
+        }}
+        onFullyRead={() => setHasReadTerms(true)}
+      />
+      <PrivacyModal
+        isOpen={privacyModalOpen}
+        onClose={() => {
+          setPrivacyModalOpen(false)
+          setAgreeToPrivacy(true)
+        }}
+        onFullyRead={() => setHasReadPrivacy(true)}
+      />
     </div>
   )
 }

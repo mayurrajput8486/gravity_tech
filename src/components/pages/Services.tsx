@@ -1,5 +1,6 @@
 import { ArrowUpRight, CheckCircle2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import PageHero from '../PageHero'
 import SectionBadge from '../SectionBadge'
 import TextRollButton from '../TextRollButton'
@@ -7,6 +8,19 @@ import AnimatedSection from '../AnimatedSection'
 import ServiceQuoteForm from '../forms/ServiceQuoteForm'
 import { SERVICES_DETAIL, WHY_GRAVITYTECH } from '../../constants/data'
 
+const SERVICE_ROUTES: Record<string, string> = {
+  'CRM Solutions': '/services/crm',
+  'Talent Acquisition': '/services/talent-acquisition',
+  'Enterprise Solutions': '/services/enterprise-solutions',
+  'Third Party Payroll': '/services/third-party-payroll',
+}
+
+const SERVICE_ACCENTS: Record<string, { accent: string; iconBg: string }> = {
+  'CRM Solutions': { accent: '#1fb6e8', iconBg: 'rgba(31,182,232,0.12)' },
+  'Talent Acquisition': { accent: '#7c3aed', iconBg: 'rgba(124,58,237,0.12)' },
+  'Enterprise Solutions': { accent: '#10b981', iconBg: 'rgba(16,185,129,0.12)' },
+  'Third Party Payroll': { accent: '#f59e0b', iconBg: 'rgba(245,158,11,0.12)' },
+}
 const HERO_STATS = [
   '4 Core Services',
   '50+ Deployments',
@@ -108,7 +122,17 @@ function Services() {
                   </div>
 
                   <div className="w-full lg:w-[55%]">
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#1fb6e8]">
+                    <div
+                      className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
+                      style={{ background: SERVICE_ACCENTS[service.title]?.iconBg }}
+                    >
+                      <Icon
+                        size={32}
+                        style={{ color: SERVICE_ACCENTS[service.title]?.accent }}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <p className="mb-3 text-6xl font-bold tracking-tight text-[#1fb6e8] sm:text-7xl lg:text-8xl">
                       0{index + 1}
                     </p>
                     <h3 className="mb-5 text-3xl font-medium tracking-tight text-gray-900 lg:text-4xl">
@@ -127,7 +151,14 @@ function Services() {
                         </li>
                       ))}
                     </ul>
-                    <TextRollButton label="Get a Quote" variant="primary" href="#quote-form" />
+                    <div className="flex flex-wrap gap-3">
+                      <TextRollButton
+                        label="More Details"
+                        variant="primary"
+                        href={SERVICE_ROUTES[service.title]}
+                      />
+                      <TextRollButton label="Get a Quote" variant="dark" href="/services#quote-form" />
+                    </div>
                   </div>
                 </div>
               )
@@ -201,7 +232,7 @@ function Services() {
               Work With Us
             </p>
             <h2 className="mb-4 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
-              Start with a free consultation.
+              Start With A Free Consultation.
             </h2>
             <p className="mx-auto max-w-xl text-gray-500">
               Tell us about your project and we&apos;ll come back with a proposal, timeline, and team
@@ -220,19 +251,15 @@ function Services() {
           showStickyBtn ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'
         }`}
       >
-        <a
-          href="#quote-form"
-          onClick={(e) => {
-            e.preventDefault()
-            document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth' })
-          }}
+        <Link
+          to="/services#quote-form"
           className="group flex items-center gap-2 rounded-full bg-[#1fb6e8] py-3 pl-5 pr-2 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(31,182,232,0.4)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(31,182,232,0.5)]"
         >
           Get a Quote
           <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
             <ArrowUpRight size={13} />
           </div>
-        </a>
+        </Link>
       </div>
     </main>
   )

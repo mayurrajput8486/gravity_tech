@@ -6,6 +6,11 @@ import Home from './components/pages/Home'
 import About from './components/pages/About'
 import Services from './components/pages/Services'
 import Careers from './components/pages/Careers'
+import CRMServicePage from './pages/services/CRMServicePage'
+import TalentAcquisitionPage from './pages/services/TalentAcquisitionPage'
+import EnterpriseSolutionsPage from './pages/services/EnterpriseSolutionsPage'
+import ThirdPartyPayrollPage from './pages/services/ThirdPartyPayrollPage'
+import SCIPPage from './pages/careers/SCIPPage'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -41,7 +46,12 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/services/crm" element={<CRMServicePage />} />
+        <Route path="/services/talent-acquisition" element={<TalentAcquisitionPage />} />
+        <Route path="/services/enterprise-solutions" element={<EnterpriseSolutionsPage />} />
+        <Route path="/services/third-party-payroll" element={<ThirdPartyPayrollPage />} />
         <Route path="/careers" element={<Careers />} />
+        <Route path="/careers/scip" element={<SCIPPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

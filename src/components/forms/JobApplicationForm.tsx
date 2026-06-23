@@ -3,6 +3,7 @@ import {
   Briefcase,
   Check,
   CheckCircle2,
+  ExternalLink,
   FileCheck,
   FileText,
   Link2,
@@ -16,6 +17,9 @@ import {
   X,
 } from 'lucide-react'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
+import TermsModal from '../modals/TermsModal'
+import PrivacyModal from '../modals/PrivacyModal'
 
 interface JobApplicationFormProps {
   preselectedRole?: string
@@ -36,8 +40,6 @@ interface ApplicationFormData {
   githubUrl: string
   resumeFile: File | null
   whyGravityTech: string
-  agreeToTerms: boolean
-  agreeToPrivacy: boolean
 }
 
 interface ApplicationFormErrors {
@@ -59,8 +61,6 @@ const INITIAL_DATA: ApplicationFormData = {
   githubUrl: '',
   resumeFile: null,
   whyGravityTech: '',
-  agreeToTerms: false,
-  agreeToPrivacy: false,
 }
 
 const ALLOWED_RESUME_TYPES = [
@@ -97,7 +97,14 @@ function DarkErrorMsg({ msg }: { msg: string }) {
   )
 }
 
-function validateApplicationForm(data: ApplicationFormData): ApplicationFormErrors {
+function validateApplicationForm(
+  data: ApplicationFormData,
+  agreeToTerms: boolean,
+  agreeToPrivacy: boolean,
+  hasReadTerms: boolean,
+  hasReadPrivacy: boolean,
+  isFresher: boolean
+): ApplicationFormErrors {
   const errors: ApplicationFormErrors = {}
 
   if (!data.fullName.trim()) errors.fullName = 'Your full name is required'
@@ -106,7 +113,7 @@ function validateApplicationForm(data: ApplicationFormData): ApplicationFormErro
 
   if (!data.email.trim()) errors.email = 'Email is required'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
-    errors.email = 'Enter a valid email address'
+    errors.email = 'Please enter a valid email address'
 
   if (!data.phone.trim()) errors.phone = 'Phone number is required'
   else if (!/^[+]?[\d\s\-()]{8,15}$/.test(data.phone.trim()))
@@ -116,7 +123,7 @@ function validateApplicationForm(data: ApplicationFormData): ApplicationFormErro
 
   if (!data.roleApplying) errors.roleApplying = "Please select the role you're applying for"
   if (!data.experienceLevel) errors.experienceLevel = 'Please select your experience level'
-  if (!data.noticePeriod) errors.noticePeriod = 'Please select your notice period'
+  if (!isFresher && !data.noticePeriod) errors.noticePeriod = 'Please select your notice period'
 
   if (!data.resumeFile) errors.resumeFile = 'Please upload your resume'
   else {
@@ -134,13 +141,21 @@ function validateApplicationForm(data: ApplicationFormData): ApplicationFormErro
   else if (data.whyGravityTech.trim().length < 80)
     errors.whyGravityTech = `Add a bit more (${80 - data.whyGravityTech.trim().length} more characters)`
 
-  if (!data.agreeToTerms) errors.agreeToTerms = 'Please agree to the terms to continue'
-  if (!data.agreeToPrivacy) errors.agreeToPrivacy = 'Please agree to the privacy policy to continue'
+  if (!agreeToTerms)
+    errors.agreeToTerms = hasReadTerms
+      ? 'Please check the box to agree to Terms & Conditions'
+      : 'Please open and read the Terms & Conditions first'
+
+  if (!agreeToPrivacy)
+    errors.agreeToPrivacy = hasReadPrivacy
+      ? 'Please check the box to agree to the Privacy Policy'
+      : 'Please open and read the Privacy Policy first'
 
   return errors
 }
 
 function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
+  const navigate = useNavigate()
   const [data, setData] = useState<ApplicationFormData>({
     ...INITIAL_DATA,
     roleApplying: preselectedRole,
@@ -150,6 +165,13 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
   const [submittedRole, setSubmittedRole] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dragOver, setDragOver] = useState(false)
+  const [isFresher, setIsFresher] = useState(false)
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
+  const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
+  const [hasReadTerms, setHasReadTerms] = useState(false)
+  const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
+  const [termsModalOpen, setTermsModalOpen] = useState(false)
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -157,6 +179,20 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
       setData((prev) => ({ ...prev, roleApplying: preselectedRole }))
     }
   }, [preselectedRole])
+
+  useEffect(() => {
+    if (data.experienceLevel === 'fresher') {
+      setData((prev) => ({
+        ...prev,
+        noticePeriod: 'immediate',
+        currentCompany: 'Fresher',
+        currentDesignation: '',
+      }))
+      setIsFresher(true)
+    } else {
+      setIsFresher(false)
+    }
+  }, [data.experienceLevel])
 
   const update = <K extends keyof ApplicationFormData>(
     key: K,
@@ -176,7 +212,14 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    const formErrors = validateApplicationForm(data)
+    const formErrors = validateApplicationForm(
+      data,
+      agreeToTerms,
+      agreeToPrivacy,
+      hasReadTerms,
+      hasReadPrivacy,
+      isFresher
+    )
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors)
       return
@@ -272,7 +315,6 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
             </label>
             <input
               type="text"
-              placeholder="Rahul Sharma"
               value={data.fullName}
               onChange={(e) => update('fullName', e.target.value)}
               className={darkInputClass(!!errors.fullName)}
@@ -290,7 +332,6 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               />
               <input
                 type="email"
-                placeholder="rahul@gmail.com"
                 value={data.email}
                 onChange={(e) => update('email', e.target.value)}
                 className={`${darkInputClass(!!errors.email)} pl-9`}
@@ -309,7 +350,7 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               />
               <input
                 type="tel"
-                placeholder="+91 98765 43210"
+                placeholder="+91 XXXXX XXXXX"
                 value={data.phone}
                 onChange={(e) => update('phone', e.target.value)}
                 className={`${darkInputClass(!!errors.phone)} pl-9`}
@@ -328,7 +369,6 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               />
               <input
                 type="text"
-                placeholder="Pune, Maharashtra"
                 value={data.city}
                 onChange={(e) => update('city', e.target.value)}
                 className={`${darkInputClass(!!errors.city)} pl-9`}
@@ -351,7 +391,13 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
             </label>
             <select
               value={data.roleApplying}
-              onChange={(e) => update('roleApplying', e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                update('roleApplying', val)
+                if (val === 'SCIP Program') {
+                  navigate('/careers/scip')
+                }
+              }}
               className={darkSelectClass(!!errors.roleApplying)}
             >
               <option value="">Select a role</option>
@@ -401,7 +447,8 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
             <select
               value={data.noticePeriod}
               onChange={(e) => update('noticePeriod', e.target.value)}
-              className={darkSelectClass(!!errors.noticePeriod)}
+              disabled={isFresher}
+              className={`${darkSelectClass(!!errors.noticePeriod)} ${isFresher ? 'cursor-not-allowed bg-[#111] opacity-50' : ''}`}
             >
               <option value="">Select notice period</option>
               <option value="immediate">Immediate joiner</option>
@@ -411,29 +458,35 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               <option value="90days">90 days</option>
             </select>
             {errors.noticePeriod && <DarkErrorMsg msg={errors.noticePeriod} />}
+            {isFresher && (
+              <p className="mt-1 text-xs text-gray-600">Not required for freshers</p>
+            )}
           </div>
           <div>
-            <label className={darkLabelClass}>
-              Current Company
-              <span className="ml-1 text-xs font-normal text-gray-500">(or Fresher/Student)</span>
-            </label>
+            <label className={darkLabelClass}>Current Company</label>
             <input
               type="text"
-              placeholder="Tech Corp Pvt Ltd / Fresher"
-              value={data.currentCompany}
+              value={isFresher ? 'Fresher' : data.currentCompany}
               onChange={(e) => update('currentCompany', e.target.value)}
-              className={darkInputClass(false)}
+              disabled={isFresher}
+              className={`${darkInputClass(false)} ${isFresher ? 'cursor-not-allowed bg-[#111] opacity-50' : ''}`}
             />
+            {isFresher && (
+              <p className="mt-1 text-xs text-gray-600">Not required for freshers</p>
+            )}
           </div>
           <div>
             <label className={darkLabelClass}>Current Designation</label>
             <input
               type="text"
-              placeholder="Software Developer / B.Tech Final Year"
               value={data.currentDesignation}
               onChange={(e) => update('currentDesignation', e.target.value)}
-              className={darkInputClass(false)}
+              disabled={isFresher}
+              className={`${darkInputClass(false)} ${isFresher ? 'cursor-not-allowed bg-[#111] opacity-50' : ''}`}
             />
+            {isFresher && (
+              <p className="mt-1 text-xs text-gray-600">Not required for freshers</p>
+            )}
           </div>
         </div>
       </div>
@@ -532,7 +585,7 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               </div>
               <input
                 type="url"
-                placeholder="linkedin.com/in/yourname"
+                placeholder="https://linkedin.com/in/..."
                 value={data.linkedinUrl}
                 onChange={(e) => update('linkedinUrl', e.target.value)}
                 className={`${darkInputClass(!!errors.linkedinUrl)} pl-9`}
@@ -548,7 +601,7 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               </label>
               <input
                 type="url"
-                placeholder="yourportfolio.com"
+                placeholder="https://"
                 value={data.portfolioUrl}
                 onChange={(e) => update('portfolioUrl', e.target.value)}
                 className={darkInputClass(false)}
@@ -561,7 +614,7 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               </label>
               <input
                 type="url"
-                placeholder="github.com/yourhandle"
+                placeholder="https://github.com/..."
                 value={data.githubUrl}
                 onChange={(e) => update('githubUrl', e.target.value)}
                 className={darkInputClass(false)}
@@ -579,7 +632,6 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
         </label>
         <textarea
           rows={4}
-          placeholder="I've been following GravityTech's work and I'm excited about the live project exposure through SCIP. I want to build real enterprise software, not just work on tutorials..."
           value={data.whyGravityTech}
           onChange={(e) => update('whyGravityTech', e.target.value)}
           className={darkTextareaClass(!!errors.whyGravityTech)}
@@ -597,38 +649,81 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
       </div>
 
       <div className="mb-8 space-y-3">
-        {[
-          { key: 'agreeToTerms' as const, text: "I agree to GravityTech's Terms & Conditions" },
-          { key: 'agreeToPrivacy' as const, text: "I agree to GravityTech's Privacy Policy" },
-        ].map((item) => (
-          <div key={item.key}>
-            <label className="group flex cursor-pointer items-start gap-3">
-              <div
-                role="checkbox"
-                aria-checked={data[item.key]}
-                tabIndex={0}
-                onClick={() => update(item.key, !data[item.key])}
-                onKeyDown={(e) => {
-                  if (e.key === ' ' || e.key === 'Enter') {
-                    e.preventDefault()
-                    update(item.key, !data[item.key])
-                  }
-                }}
-                className={`mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded border transition-all duration-200 ${
-                  data[item.key]
-                    ? 'border-[#1fb6e8] bg-[#1fb6e8]'
-                    : 'border-gray-600 hover:border-gray-500'
-                }`}
+        <div>
+          <label className="flex items-start gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (!hasReadTerms) setTermsModalOpen(true)
+                else setAgreeToTerms((v) => !v)
+              }}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                agreeToTerms
+                  ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                  : hasReadTerms
+                    ? 'cursor-pointer border-gray-600 hover:border-gray-500'
+                    : 'cursor-pointer border-gray-600 bg-[#111]'
+              }`}
+            >
+              {agreeToTerms && <Check size={11} className="text-white" strokeWidth={3} />}
+            </button>
+            <span className="text-sm leading-relaxed text-gray-400">
+              I agree to GravityTech&apos;s{' '}
+              <button
+                type="button"
+                onClick={() => setTermsModalOpen(true)}
+                className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
               >
-                {data[item.key] && <Check size={11} className="text-white" strokeWidth={3} />}
-              </div>
-              <span className="text-sm leading-relaxed text-gray-400 transition-colors group-hover:text-gray-300">
-                {item.text}
-              </span>
-            </label>
-            {errors[item.key] && <DarkErrorMsg msg={errors[item.key]} />}
-          </div>
-        ))}
+                Terms & Conditions
+                <ExternalLink size={11} />
+              </button>
+              {!hasReadTerms && (
+                <span className="mt-1 block text-xs text-amber-400">
+                  Please open and read the full document to enable this checkbox
+                </span>
+              )}
+            </span>
+          </label>
+          {errors.agreeToTerms && <DarkErrorMsg msg={errors.agreeToTerms} />}
+        </div>
+
+        <div>
+          <label className="flex items-start gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (!hasReadPrivacy) setPrivacyModalOpen(true)
+                else setAgreeToPrivacy((v) => !v)
+              }}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                agreeToPrivacy
+                  ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                  : hasReadPrivacy
+                    ? 'cursor-pointer border-gray-600 hover:border-gray-500'
+                    : 'cursor-pointer border-gray-600 bg-[#111]'
+              }`}
+            >
+              {agreeToPrivacy && <Check size={11} className="text-white" strokeWidth={3} />}
+            </button>
+            <span className="text-sm leading-relaxed text-gray-400">
+              I agree to GravityTech&apos;s{' '}
+              <button
+                type="button"
+                onClick={() => setPrivacyModalOpen(true)}
+                className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
+              >
+                Privacy Policy
+                <ExternalLink size={11} />
+              </button>
+              {!hasReadPrivacy && (
+                <span className="mt-1 block text-xs text-amber-400">
+                  Please open and read the full document to enable this checkbox
+                </span>
+              )}
+            </span>
+          </label>
+          {errors.agreeToPrivacy && <DarkErrorMsg msg={errors.agreeToPrivacy} />}
+        </div>
       </div>
 
       <button
@@ -657,6 +752,23 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
           </>
         )}
       </button>
+
+      <TermsModal
+        isOpen={termsModalOpen}
+        onClose={() => {
+          setTermsModalOpen(false)
+          setAgreeToTerms(true)
+        }}
+        onFullyRead={() => setHasReadTerms(true)}
+      />
+      <PrivacyModal
+        isOpen={privacyModalOpen}
+        onClose={() => {
+          setPrivacyModalOpen(false)
+          setAgreeToPrivacy(true)
+        }}
+        onFullyRead={() => setHasReadPrivacy(true)}
+      />
     </form>
   )
 }

@@ -12,11 +12,16 @@ function HeroBackground() {
       <Shader className="h-full w-full" style={{ width: '100%', height: '100%' }}>
         <Swirl colorA="#09196b" colorB="#5e0808" detail={1.7} />
         <ChromaFlow
-          baseColor="#ffffff"
+          /* baseColor="#ffffff"
           downColor="#1fb6e8"
           leftColor="#1fb6e8"
           rightColor="#0ea5e9"
-          upColor="#06b6d4"
+          upColor="#06b6d4" */
+          baseColor="#1a0a2e"
+          downColor="#2d1b4e"
+          leftColor="#3d1f7d"
+          rightColor="black"
+          upColor="black"
           momentum={13}
           radius={3.5}
         />

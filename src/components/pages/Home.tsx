@@ -17,6 +17,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { CLIENTS, HOME_SERVICES } from '../../constants/data'
 import AnimatedSection from '../AnimatedSection'
 import ExpandHoverButton from '../ExpandHoverButton'
@@ -70,6 +71,9 @@ function ServiceCard({
   gradient,
   imageUrl,
   icon: Icon,
+  accent,
+  iconBg,
+  detailRoute,
   aspectClass,
   buttonVariant,
   buttonLabel,
@@ -79,8 +83,9 @@ function ServiceCard({
 
   return (
     <article>
-      <div
-        className={`group relative ${aspectClass} cursor-pointer overflow-hidden rounded-2xl`}
+      <Link
+        to={detailRoute}
+        className={`group relative block ${aspectClass} overflow-hidden rounded-2xl`}
         style={{ background: bg }}
       >
         <img
@@ -95,7 +100,12 @@ function ServiceCard({
         />
         <div className="absolute right-1/4 top-1/3 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
         <div className="absolute left-5 top-5 z-10">
-          <Icon className="text-white/70" size={20} aria-hidden="true" />
+          <div
+            className="flex h-16 w-16 items-center justify-center rounded-2xl"
+            style={{ background: iconBg }}
+          >
+            <Icon size={32} style={{ color: accent }} aria-hidden="true" />
+          </div>
         </div>
         <ExpandHoverButton
           label={buttonLabel}
@@ -103,7 +113,7 @@ function ServiceCard({
           widthClass={buttonWidth}
           useLinkIcon={isLight}
         />
-      </div>
+      </Link>
       <p className="mt-4 text-[13px] leading-relaxed text-gray-600 sm:text-sm">
         {description}
       </p>
@@ -186,7 +196,7 @@ function Home() {
           </h1>
 
           <div className="mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:items-center sm:gap-5">
-            <TextRollButton label="Start a Project" href="/careers#apply" variant="primary" />
+            <TextRollButton label="Start a Project" href="/services#quote-form" variant="primary" />
 
             
           </div>
@@ -309,7 +319,7 @@ function Home() {
                 <h3 className="mb-2 text-xl font-semibold text-white">
                   Let&apos;s Build Your Platform Together
                 </h3>
-                <TextRollButton label="Start a Project" href="/careers#apply" variant="white" />
+                <TextRollButton label="Start a Project" href="/services#quote-form" variant="white" />
               </div>
             </div>
 
@@ -536,7 +546,7 @@ function Home() {
                 <div className="h-8 w-8 rounded-full border-2 border-white bg-[#7c3aed]" />
                 <div className="h-8 w-8 rounded-full border-2 border-white bg-[#f59e0b]" />
               </div>
-              <p className="text-6xl font-bold text-gray-900">50+</p>
+              <p className="text-6xl font-bold text-gray-900 sm:text-7xl lg:text-8xl">50+</p>
               <p className="mt-3 text-sm text-gray-600">Businesses served across India, UAE, and USA</p>
             </article>
             <article className="-mt-0 rounded-2xl border border-gray-100 bg-gray-50 p-8 transition-all duration-300 hover:border-[#1fb6e8]/30 hover:shadow-lg md:-mt-6">
@@ -544,7 +554,7 @@ function Home() {
                 Projects Delivered
               </p>
               <TrendingUp className="mb-4 text-[#1fb6e8]" size={24} />
-              <p className="text-6xl font-bold text-gray-900">100+</p>
+              <p className="text-6xl font-bold text-gray-900 sm:text-7xl lg:text-8xl">100+</p>
               <p className="mt-3 text-sm text-gray-600">
                 Live projects shipped with real business outcomes
               </p>
@@ -554,7 +564,7 @@ function Home() {
                 Years Building IT
               </p>
               <Calendar className="mb-4 text-[#1fb6e8]" size={24} />
-              <p className="text-6xl font-bold text-gray-900">5+</p>
+              <p className="text-6xl font-bold text-gray-900 sm:text-7xl lg:text-8xl">5+</p>
               <p className="mt-3 text-sm text-gray-600">Years of engineering excellence, now AI-augmented</p>
             </article>
           </div>
@@ -579,7 +589,7 @@ function Home() {
             sales decks. No wasted time. Just a conversation about what you need to build.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <TextRollButton label="Start a Project" href="/careers#apply" variant="primary" />
+            <TextRollButton label="Start a Project" href="/services#quote-form" variant="primary" />
             <TextRollButton label="View Our Work" href="/services" variant="outline-white" />
           </div>
           <p className="mt-8 text-xs text-gray-600">

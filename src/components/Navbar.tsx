@@ -25,7 +25,11 @@ function Navbar() {
 
   useEffect(() => {
     const darkRoutes = ['/about', '/careers']
-    if (!darkRoutes.includes(location.pathname)) {
+    const isDarkPath =
+      darkRoutes.includes(location.pathname) ||
+      location.pathname.startsWith('/careers/') ||
+      location.pathname.startsWith('/services/')
+    if (!isDarkPath) {
       setIsDarkHeroVisible(false)
       return
     }
@@ -48,7 +52,11 @@ function Navbar() {
   }, [location.pathname])
 
   const useDarkCapsules = useMemo(
-    () => ['/about', '/careers'].includes(location.pathname) && isDarkHeroVisible,
+    () =>
+      (['/about', '/careers'].includes(location.pathname) ||
+        location.pathname.startsWith('/careers/') ||
+        location.pathname.startsWith('/services/')) &&
+      isDarkHeroVisible,
     [location.pathname, isDarkHeroVisible]
   )
 
@@ -120,7 +128,7 @@ function Navbar() {
           </div>
 
           <Link
-            to="/services#quote"
+            to="/services#quote-form"
             onClick={scrollToQuoteForm}
             className="group hidden items-center gap-2 rounded-full bg-[#1fb6e8] py-2 pl-5 pr-2 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(31,182,232,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#0da8da] hover:shadow-[0_6px_20px_rgba(31,182,232,0.5)] sm:flex"
           >
@@ -210,7 +218,7 @@ function Navbar() {
 
           <div className="flex flex-col gap-3">
             <Link
-              to="/services#quote"
+              to="/services#quote-form"
               onClick={() => {
                 setIsMenuOpen(false)
                 scrollToQuoteForm()

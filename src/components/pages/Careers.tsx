@@ -1,6 +1,6 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PageHero from "../PageHero";
 import SectionBadge from "../SectionBadge";
 import TextRollButton from "../TextRollButton";
@@ -76,7 +76,7 @@ function Careers() {
           />
           <TextRollButton
             label="Learn About SCIP →"
-            href="#scip"
+            href="/careers/scip"
             variant="dark"
           />
         </div>
@@ -113,14 +113,14 @@ function Careers() {
               <TextRollButton
                 label="Apply for SCIP"
                 variant="primary"
-                href="#apply"
+                href="/careers/scip"
               />
-              <a
-                href="#apply"
+              <Link
+                to="/careers/scip"
                 className="text-sm text-white/60 transition-colors duration-200 hover:text-white"
               >
                 Learn more about the program ↓
-              </a>
+              </Link>
             </div>
           </div>
 
