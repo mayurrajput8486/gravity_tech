@@ -6,6 +6,7 @@ import SectionBadge from '../SectionBadge'
 import TextRollButton from '../TextRollButton'
 import AnimatedSection from '../AnimatedSection'
 import ServiceQuoteForm from '../forms/ServiceQuoteForm'
+import ServiceInteractiveVisual from '../ServiceInteractiveVisual'
 import { SERVICES_DETAIL, WHY_GRAVITYTECH } from '../../constants/data'
 
 const SERVICE_ROUTES: Record<string, string> = {
@@ -15,12 +16,6 @@ const SERVICE_ROUTES: Record<string, string> = {
   'Third Party Payroll': '/services/third-party-payroll',
 }
 
-const SERVICE_ACCENTS: Record<string, { accent: string; iconBg: string }> = {
-  'CRM Solutions': { accent: '#1fb6e8', iconBg: 'rgba(31,182,232,0.12)' },
-  'Talent Acquisition': { accent: '#7c3aed', iconBg: 'rgba(124,58,237,0.12)' },
-  'Enterprise Solutions': { accent: '#10b981', iconBg: 'rgba(16,185,129,0.12)' },
-  'Third Party Payroll': { accent: '#f59e0b', iconBg: 'rgba(245,158,11,0.12)' },
-}
 const HERO_STATS = [
   '4 Core Services',
   '50+ Deployments',
@@ -92,43 +87,28 @@ function Services() {
                     isEven ? 'lg:flex-row-reverse' : 'lg:flex-row'
                   }`}
                 >
-                  <div className="relative w-full overflow-hidden rounded-2xl lg:w-[45%]">
-                    <div
-                      className="relative aspect-[4/3] w-full"
-                      style={{ background: service.bg }}
-                    >
-                      <div
-                        className="absolute inset-0 opacity-80"
-                        style={{ background: service.color }}
-                      />
-                      <div className="absolute right-1/4 top-1/4 h-24 w-24 animate-pulse rounded-full bg-white/10 blur-xl" />
-                      <div className="animate-float absolute bottom-1/3 left-1/3 h-16 w-16 rounded-full bg-white/5 blur-lg" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Icon size={80} className="text-white/20" aria-hidden="true" />
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent p-6">
-                        <div className="flex flex-wrap gap-2">
-                          {service.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/80"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                  <div className="relative w-full lg:w-[45%]">
+                    <ServiceInteractiveVisual
+                      serviceId={service.id}
+                      title={service.title}
+                      icon={Icon}
+                      gradient={service.color}
+                      bg={service.bg}
+                      imageUrl={service.imageUrl}
+                      accent={service.accent}
+                      iconBg={service.iconBg}
+                      tags={service.tags}
+                    />
                   </div>
 
                   <div className="w-full lg:w-[55%]">
                     <div
                       className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
-                      style={{ background: SERVICE_ACCENTS[service.title]?.iconBg }}
+                      style={{ background: service.iconBg }}
                     >
                       <Icon
                         size={32}
-                        style={{ color: SERVICE_ACCENTS[service.title]?.accent }}
+                        style={{ color: service.accent }}
                         aria-hidden="true"
                       />
                     </div>

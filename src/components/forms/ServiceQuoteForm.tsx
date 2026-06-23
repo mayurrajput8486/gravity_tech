@@ -21,6 +21,8 @@ import {
 import { useState, type FormEvent } from 'react'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
+import { submitQuoteRequest } from '../../lib/submissions'
+import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 
 interface QuoteFormData {
   serviceType: string[]
@@ -204,6 +206,7 @@ function ServiceQuoteForm() {
   const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
   const [termsModalOpen, setTermsModalOpen] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const update = <K extends keyof QuoteFormData>(key: K, value: QuoteFormData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }))
@@ -239,9 +242,38 @@ function ServiceQuoteForm() {
       return
     }
 
+    if (!isGoogleSheetsConfigured()) {
+      setSubmitError('Form storage is not configured. Please contact the site administrator.')
+      return
+    }
+
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1200))
+    setSubmitError('')
+
+    const result = await submitQuoteRequest({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      companyName: data.companyName,
+      companyEmail: data.companyEmail,
+      phone: data.phone,
+      designation: data.designation,
+      companySize: data.companySize,
+      serviceType: data.serviceType,
+      projectTimeline: data.projectTimeline,
+      estimatedBudget: data.estimatedBudget,
+      projectDescription: data.projectDescription,
+      currentChallenges: data.currentChallenges,
+      hasExistingSystem: data.hasExistingSystem,
+      preferredStartDate: data.preferredStartDate,
+    })
+
     setIsSubmitting(false)
+
+    if (!result.ok) {
+      setSubmitError(result.message)
+      return
+    }
+
     setSubmitted(true)
     setData(INITIAL_DATA)
     setCurrentStep(0)
@@ -679,6 +711,10 @@ function ServiceQuoteForm() {
                 </div>
               </div>
             </div>
+          )}
+
+          {submitError && (
+            <p className="mt-4 text-sm text-red-500">{submitError}</p>
           )}
 
           <div className="mt-8 flex items-center justify-between border-t border-gray-100 pt-6">

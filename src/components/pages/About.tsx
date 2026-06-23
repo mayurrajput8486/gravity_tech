@@ -6,6 +6,8 @@ import TextRollButton from '../TextRollButton'
 import AnimatedSection from '../AnimatedSection'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
+import { submitBusinessEnquiry } from '../../lib/submissions'
+import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 import {
   BUILD_DIFFERENTLY,
   GRADIENT_LIGHT,
@@ -35,6 +37,8 @@ const INITIAL_FORM_DATA: EnquiryFormData = {
 function About() {
   const [formData, setFormData] = useState<EnquiryFormData>(INITIAL_FORM_DATA)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
   const [hasReadTerms, setHasReadTerms] = useState(false)
@@ -96,10 +100,35 @@ function About() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!validateForm()) return
+
+    if (!isGoogleSheetsConfigured()) {
+      setSubmitError('Form storage is not configured. Please contact the site administrator.')
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitError('')
+
+    const result = await submitBusinessEnquiry({
+      firstName: formData.firstName,
+      companyEmail: formData.companyEmail,
+      designation: formData.designation,
+      phone: formData.phone,
+      requirements: formData.requirements,
+    })
+
+    setIsSubmitting(false)
+
+    if (!result.ok) {
+      setSubmitError(result.message)
+      return
+    }
+
     setFormSubmitted(true)
+    setFormData(INITIAL_FORM_DATA)
   }
 
   return (
@@ -646,10 +675,14 @@ function About() {
 
                   <button
                     type="submit"
-                    className="w-full rounded-xl bg-gray-900 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+                    disabled={isSubmitting}
+                    className="w-full rounded-xl bg-gray-900 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Send Message
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </button>
+                  {submitError && (
+                    <p className="mt-2 text-sm text-red-500">{submitError}</p>
+                  )}
                 </form>
               )}
 

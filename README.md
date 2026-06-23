@@ -40,6 +40,55 @@ src/
         └── Careers.tsx
 ```
 
+## Form submissions (Google Sheets + Drive)
+
+All site forms save to **Google Sheets** (one tab per form type). Job application **resumes** are uploaded to **Google Drive**.
+
+### 1. Create the Google Sheet
+
+Create a spreadsheet with **4 tabs** (exact names):
+
+| Tab name | Form |
+|----------|------|
+| `Business Enquiries` | About — Business Enquiry |
+| `Quote Requests` | Services — Get a Quote |
+| `Job Applications` | Careers — Job Application |
+| `SCIP Applications` | SCIP — Apply for SCIP |
+
+### 2. Create a Drive folder for resumes
+
+1. In Google Drive, create a folder (e.g. `GravityTech Resumes`)
+2. Copy its folder ID from the URL: `drive.google.com/drive/folders/FOLDER_ID_HERE`
+
+### 3. Deploy the Apps Script
+
+1. Open your spreadsheet → **Extensions → Apps Script**
+2. Paste the code from `google-apps-script/FormWebhook.gs`
+3. Set `DRIVE_FOLDER_ID` at the top of the script to your folder ID
+4. Run **`setupSheetHeaders`** once (creates column headers on each tab)
+5. **Deploy → New deployment → Web app**
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+6. Copy the **Web app URL** (ends with `/exec`)
+
+### 4. Connect the website
+
+```bash
+cp .env.example .env
+```
+
+Set in `.env`:
+
+```
+VITE_GOOGLE_SHEETS_URL=https://script.google.com/macros/s/YOUR_ID/exec
+```
+
+For **Netlify**, add the same variable under **Site settings → Environment variables**, then redeploy.
+
+Restart dev server: `npm run dev`
+
+Submissions appear as new rows in the matching sheet tab. Resume links appear in the **Resume Link** column on **Job Applications**.
+
 ## Getting Started
 
 ```bash

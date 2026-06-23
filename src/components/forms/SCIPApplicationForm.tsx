@@ -10,6 +10,8 @@ import { useState, type FormEvent } from 'react'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
 import SCIPTermsModal from '../modals/SCIPTermsModal'
+import { submitSCIPApplication } from '../../lib/submissions'
+import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 
 interface SCIPFormData {
   fullName: string
@@ -127,6 +129,7 @@ function SCIPApplicationForm() {
   const [termsModalOpen, setTermsModalOpen] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
   const [scipModalOpen, setScipModalOpen] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const update = <K extends keyof SCIPFormData>(key: K, value: SCIPFormData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }))
@@ -153,9 +156,34 @@ function SCIPApplicationForm() {
       return
     }
 
+    if (!isGoogleSheetsConfigured()) {
+      setSubmitError('Form storage is not configured. Please contact the site administrator.')
+      return
+    }
+
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1200))
+    setSubmitError('')
+
+    const result = await submitSCIPApplication({
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      city: data.city,
+      track: data.track,
+      qualification: data.qualification,
+      graduationYear: data.graduationYear,
+      college: data.college,
+      projectLink: data.projectLink,
+      whyScip: data.whyScip,
+    })
+
     setIsSubmitting(false)
+
+    if (!result.ok) {
+      setSubmitError(result.message)
+      return
+    }
+
     setSubmitted(true)
     setData(INITIAL_DATA)
     setErrors({})
@@ -410,6 +438,13 @@ function SCIPApplicationForm() {
             </div>
           ))}
         </div>
+
+        {submitError && (
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+            <AlertCircle size={16} className="mt-0.5 shrink-0" />
+            {submitError}
+          </div>
+        )}
 
         <button
           type="submit"

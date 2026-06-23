@@ -154,10 +154,15 @@ export const OFFICES = [
 
 export const SERVICES_DETAIL = [
   {
+    id: 'crm',
     title: 'CRM Solutions',
     color: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
     bg: '#0f172a',
     icon: Users2,
+    accent: '#1fb6e8',
+    iconBg: 'rgba(31,182,232,0.2)',
+    imageUrl:
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
     description:
       'Custom CRM platforms built for sales teams, relationship managers, and enterprise pipelines. AI-assisted lead scoring, pipeline automation, and real-time analytics.',
     features: [
@@ -170,10 +175,15 @@ export const SERVICES_DETAIL = [
     tags: ['Sales Pipeline', 'AI Scoring', 'Analytics', 'Integrations'],
   },
   {
+    id: 'talent',
     title: 'Talent Acquisition',
     color: 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)',
     bg: '#1e1b4b',
     icon: UserSearch,
+    accent: '#7c3aed',
+    iconBg: 'rgba(124,58,237,0.2)',
+    imageUrl:
+      'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80',
     description:
       'End-to-end recruitment technology from job posting and AI resume screening to interview scheduling and onboarding workflows. Built for HR teams that need to move fast.',
     features: [
@@ -186,10 +196,15 @@ export const SERVICES_DETAIL = [
     tags: ['AI Screening', 'Scheduling', 'Onboarding', 'HR Analytics'],
   },
   {
+    id: 'enterprise',
     title: 'Enterprise Solutions',
     color: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
     bg: '#064e3b',
     icon: Building2,
+    accent: '#10b981',
+    iconBg: 'rgba(16,185,129,0.2)',
+    imageUrl:
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
     description:
       'Large-scale enterprise software — ERP integrations, workflow automation, cross-department portals, and custom platforms engineered for scale, security, and maintainability.',
     features: [
@@ -202,10 +217,15 @@ export const SERVICES_DETAIL = [
     tags: ['ERP', 'Automation', 'RBAC', 'Cloud Scale'],
   },
   {
+    id: 'payroll',
     title: 'Third Party Payroll',
     color: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
     bg: '#1c1917',
     icon: Wallet,
+    accent: '#f59e0b',
+    iconBg: 'rgba(245,158,11,0.2)',
+    imageUrl:
+      'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
     description:
       'Fully managed payroll processing for enterprises — compliance, statutory filings (PF, ESI, TDS), salary disbursement, and real-time payroll reporting.',
     features: [

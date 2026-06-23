@@ -20,6 +20,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
+import { submitJobApplication } from '../../lib/submissions'
+import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 
 interface JobApplicationFormProps {
   preselectedRole?: string
@@ -172,6 +174,7 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
   const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
   const [termsModalOpen, setTermsModalOpen] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -225,10 +228,39 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
       return
     }
 
+    if (!isGoogleSheetsConfigured()) {
+      setSubmitError('Form storage is not configured. Please contact the site administrator.')
+      return
+    }
+
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-    setSubmittedRole(data.roleApplying)
+    setSubmitError('')
+
+    const result = await submitJobApplication({
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      city: data.city,
+      roleApplying: data.roleApplying,
+      experienceLevel: data.experienceLevel,
+      currentCompany: data.currentCompany,
+      currentDesignation: data.currentDesignation,
+      noticePeriod: data.noticePeriod,
+      linkedinUrl: data.linkedinUrl,
+      portfolioUrl: data.portfolioUrl,
+      githubUrl: data.githubUrl,
+      resumeFile: data.resumeFile!,
+      whyGravityTech: data.whyGravityTech,
+    })
+
     setIsSubmitting(false)
+
+    if (!result.ok) {
+      setSubmitError(result.message)
+      return
+    }
+
+    setSubmittedRole(data.roleApplying)
     setSubmitted(true)
     setData(INITIAL_DATA)
     setErrors({})
@@ -725,6 +757,13 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
           {errors.agreeToPrivacy && <DarkErrorMsg msg={errors.agreeToPrivacy} />}
         </div>
       </div>
+
+      {submitError && (
+        <div className="mb-6 flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          {submitError}
+        </div>
+      )}
 
       <button
         type="submit"
