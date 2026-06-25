@@ -5,6 +5,7 @@ interface AnimatedSectionProps {
   className?: string
   threshold?: number
   style?: CSSProperties
+  id?: string
 }
 
 function AnimatedSection({
@@ -12,6 +13,7 @@ function AnimatedSection({
   className = '',
   threshold = 0.2,
   style,
+  id,
 }: AnimatedSectionProps) {
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef<HTMLElement | null>(null)
@@ -37,6 +39,7 @@ function AnimatedSection({
   return (
     <section
       ref={ref}
+      id={id}
       style={style}
       className={`transition-all duration-700 ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'

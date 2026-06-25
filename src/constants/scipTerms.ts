@@ -2,12 +2,12 @@ export const SCIP_TERMS_SECTIONS = [
   {
     title: 'Section 1: Program Commitment',
     content:
-      'Participants commit to the full program duration (8–12 weeks as defined at cohort start). Early exit without valid reason may disqualify you from future GravityTech opportunities.',
+      'Participants commit to the full SCIP training period (typically 2–3 months) before client project deployment. Early exit without valid reason may affect your standing at GravityTech.',
   },
   {
     title: 'Section 2: Attendance & Participation',
     content:
-      'SCIP is a full-time commitment during program hours (Monday–Friday, 9AM–6PM IST). Remote or hybrid schedule as defined per cohort. Consistent non-attendance without prior approval leads to program removal.',
+      'SCIP is a full-time commitment during work hours (Monday–Friday, 9AM–6PM IST). Remote or hybrid schedule as defined by your role. Consistent non-attendance without prior approval leads to removal from the program.',
   },
   {
     title: 'Section 3: Confidentiality',
@@ -22,12 +22,12 @@ export const SCIP_TERMS_SECTIONS = [
   {
     title: 'Section 5: Stipend & Compensation',
     content:
-      'SCIP provides a monthly stipend as communicated at the time of selection. Stipend is not a salary and does not guarantee employment post-program.',
+      'SCIP provides compensation as communicated at the time of your offer. This is employment with GravityTech, not an external training program.',
   },
   {
     title: 'Section 6: Employment Pathway',
     content:
-      'High-performing SCIP participants will be considered for full-time roles at GravityTech. Completion of SCIP does not guarantee employment. Conversion is based on performance, project needs, and available positions.',
+      'SCIP hires you into GravityTech. After training, you contribute to client projects and grow within the company based on performance and business needs.',
   },
   {
     title: 'Section 7: Code of Conduct',

@@ -67,8 +67,6 @@ function ClientGrid({ clients }: { clients: typeof CLIENTS }) {
 function ServiceCard({
   title,
   description,
-  bg,
-  gradient,
   imageUrl,
   icon: Icon,
   accent,
@@ -85,23 +83,18 @@ function ServiceCard({
     <article>
       <Link
         to={detailRoute}
-        className={`group relative block ${aspectClass} overflow-hidden rounded-2xl`}
-        style={{ background: bg }}
+        className={`group relative block ${aspectClass} overflow-hidden rounded-2xl bg-gray-900`}
       >
         <img
           src={imageUrl}
           alt={title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-luminosity transition-opacity duration-500 group-hover:opacity-35"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div
-          className="absolute inset-0 opacity-70"
-          style={{ background: gradient }}
-        />
-        <div className="absolute right-1/4 top-1/3 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute left-5 top-5 z-10">
           <div
-            className="flex h-16 w-16 items-center justify-center rounded-2xl"
+            className="flex h-16 w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
             style={{ background: iconBg }}
           >
             <Icon size={32} style={{ color: accent }} aria-hidden="true" />

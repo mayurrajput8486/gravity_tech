@@ -33,15 +33,20 @@ function ScrollToTop() {
   return null
 }
 
-export default function App() {
+function AppShell() {
+  const location = useLocation()
+  const isScipPage = location.pathname === '/careers/scip'
+
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-30">
-        <div className="pointer-events-auto">
-          <Navbar />
+      {!isScipPage && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-30">
+          <div className="pointer-events-auto">
+            <Navbar />
+          </div>
         </div>
-      </div>
+      )}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -53,7 +58,15 @@ export default function App() {
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/scip" element={<SCIPPage />} />
       </Routes>
-      <Footer />
+      {!isScipPage && <Footer />}
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   )
 }

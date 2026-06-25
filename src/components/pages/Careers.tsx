@@ -172,7 +172,7 @@ function Careers() {
           </div>
 
           <p className="mt-8 text-center text-xs text-white/30">
-            SCIP runs in quarterly cohorts · Next batch: Q3 2026
+            SCIP is always open — we hire through our standard interview process
           </p>
         </div>
       </section>

@@ -16,15 +16,17 @@ import {
   User,
   X,
 } from 'lucide-react'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type UIEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
+import { SCIP_TERMS_SECTIONS } from '../../constants/scipTerms'
 import { submitJobApplication } from '../../lib/submissions'
 import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 
 interface JobApplicationFormProps {
   preselectedRole?: string
+  lockRole?: boolean
 }
 
 interface ApplicationFormData {
@@ -103,9 +105,12 @@ function validateApplicationForm(
   data: ApplicationFormData,
   agreeToTerms: boolean,
   agreeToPrivacy: boolean,
+  agreeToScip: boolean,
   hasReadTerms: boolean,
   hasReadPrivacy: boolean,
-  isFresher: boolean
+  hasReadScip: boolean,
+  isFresher: boolean,
+  isScipApplication: boolean
 ): ApplicationFormErrors {
   const errors: ApplicationFormErrors = {}
 
@@ -153,10 +158,15 @@ function validateApplicationForm(
       ? 'Please check the box to agree to the Privacy Policy'
       : 'Please open and read the Privacy Policy first'
 
+  if (isScipApplication && !agreeToScip)
+    errors.agreeToScip = hasReadScip
+      ? 'Please check the box to agree to the SCIP Program Terms & Conditions'
+      : 'Please scroll through and read the SCIP Program terms first'
+
   return errors
 }
 
-function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
+function JobApplicationForm({ preselectedRole = '', lockRole = false }: JobApplicationFormProps) {
   const navigate = useNavigate()
   const [data, setData] = useState<ApplicationFormData>({
     ...INITIAL_DATA,
@@ -170,12 +180,31 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
   const [isFresher, setIsFresher] = useState(false)
   const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [agreeToPrivacy, setAgreeToPrivacy] = useState(false)
+  const [agreeToScip, setAgreeToScip] = useState(false)
   const [hasReadTerms, setHasReadTerms] = useState(false)
   const [hasReadPrivacy, setHasReadPrivacy] = useState(false)
+  const [hasReadScip, setHasReadScip] = useState(false)
   const [termsModalOpen, setTermsModalOpen] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const scipTermsRef = useRef<HTMLDivElement>(null)
+
+  const isScipApplication = data.roleApplying === 'SCIP Program'
+
+  const handleScipTermsScroll = (event: UIEvent<HTMLDivElement>) => {
+    if (hasReadScip) return
+    const el = event.currentTarget
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24
+    if (atBottom) setHasReadScip(true)
+  }
+
+  useEffect(() => {
+    if (!isScipApplication) return
+    const el = scipTermsRef.current
+    if (!el || hasReadScip) return
+    if (el.scrollHeight <= el.clientHeight + 1) setHasReadScip(true)
+  }, [isScipApplication, hasReadScip])
 
   useEffect(() => {
     if (preselectedRole) {
@@ -219,9 +248,12 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
       data,
       agreeToTerms,
       agreeToPrivacy,
+      agreeToScip,
       hasReadTerms,
       hasReadPrivacy,
-      isFresher
+      hasReadScip,
+      isFresher,
+      isScipApplication
     )
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors)
@@ -324,13 +356,15 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
           <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#1fb6e8]/30 bg-[#1fb6e8]/10 px-4 py-3">
             <Briefcase size={15} className="shrink-0 text-[#1fb6e8]" />
             <p className="text-sm font-medium text-[#1fb6e8]">Applying for: {preselectedRole}</p>
-            <button
-              type="button"
-              onClick={() => update('roleApplying', '')}
-              className="ml-auto text-[#1fb6e8]/60 hover:text-[#1fb6e8]"
-            >
-              <X size={14} />
-            </button>
+            {!lockRole && (
+              <button
+                type="button"
+                onClick={() => update('roleApplying', '')}
+                className="ml-auto text-[#1fb6e8]/60 hover:text-[#1fb6e8]"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -426,11 +460,16 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
               onChange={(e) => {
                 const val = e.target.value
                 update('roleApplying', val)
-                if (val === 'SCIP Program') {
+                if (val === 'SCIP Program' && !lockRole) {
                   navigate('/careers/scip')
                 }
+                if (val !== 'SCIP Program') {
+                  setAgreeToScip(false)
+                  setHasReadScip(false)
+                }
               }}
-              className={darkSelectClass(!!errors.roleApplying)}
+              disabled={lockRole}
+              className={`${darkSelectClass(!!errors.roleApplying)} ${lockRole ? 'cursor-not-allowed bg-[#111] opacity-80' : ''}`}
             >
               <option value="">Select a role</option>
               <optgroup label="Internships">
@@ -679,6 +718,63 @@ function JobApplicationForm({ preselectedRole = '' }: JobApplicationFormProps) {
           </span>
         </div>
       </div>
+
+      {isScipApplication && (
+        <>
+          <div id="scip-terms" className="mb-6">
+            <p className={darkLabelClass}>SCIP Terms & Conditions</p>
+            <div
+              ref={scipTermsRef}
+              onScroll={handleScipTermsScroll}
+              className="max-h-56 overflow-y-auto rounded-xl border border-gray-700 bg-[#111] p-5 text-sm leading-relaxed text-gray-400"
+            >
+              <div className="space-y-4">
+                {SCIP_TERMS_SECTIONS.map((section) => (
+                  <div key={section.title}>
+                    <h3 className="mb-1.5 text-sm font-semibold text-white">{section.title}</h3>
+                    <p>{section.content}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 border-t border-gray-800 pt-4 text-xs text-gray-500">
+                By checking the box below, you confirm that you have read, understood, and agree to
+                be bound by the SCIP Program terms outlined above.
+              </p>
+            </div>
+            {!hasReadScip && (
+              <p className="mt-2 text-xs text-amber-400">
+                Scroll to the bottom of the terms to enable the agreement checkbox.
+              </p>
+            )}
+          </div>
+
+          <div className="mb-8">
+            <label className="flex items-start gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!hasReadScip) return
+                  setAgreeToScip((v) => !v)
+                }}
+                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                  agreeToScip
+                    ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                    : hasReadScip
+                      ? 'cursor-pointer border-gray-600 hover:border-gray-500'
+                      : 'cursor-not-allowed border-gray-700 bg-[#111] opacity-50'
+                }`}
+              >
+                {agreeToScip && <Check size={11} className="text-white" strokeWidth={3} />}
+              </button>
+              <span className="text-sm leading-relaxed text-gray-400">
+                I have read and agree to the SCIP Program Terms & Conditions{' '}
+                <span className="text-red-400">*</span>
+              </span>
+            </label>
+            {errors.agreeToScip && <DarkErrorMsg msg={errors.agreeToScip} />}
+          </div>
+        </>
+      )}
 
       <div className="mb-8 space-y-3">
         <div>

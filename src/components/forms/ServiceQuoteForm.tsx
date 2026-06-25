@@ -1,7 +1,9 @@
 import {
   ArrowRight,
   Brain,
+  Briefcase,
   Building2,
+  Calendar,
   Check,
   CheckCircle2,
   ChevronLeft,
@@ -13,12 +15,13 @@ import {
   Mail,
   Phone,
   Send,
+  User,
   UserSearch,
   Users,
   Users2,
   Wallet,
 } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
 import { submitQuoteRequest } from '../../lib/submissions'
@@ -76,12 +79,37 @@ function inputClass(hasError: boolean) {
   return `input-base ${hasError ? 'input-error' : ''}`
 }
 
-function selectClass(hasError: boolean) {
-  return `${inputClass(hasError)} cursor-pointer`
-}
-
 function textareaClass(hasError: boolean) {
   return `${inputClass(hasError)} resize-none`
+}
+
+const iconInnerClass =
+  'w-full border-0 bg-transparent px-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:ring-0'
+
+function FormIconField({
+  icon: Icon,
+  hasError,
+  children,
+}: {
+  icon: typeof Mail
+  hasError?: boolean
+  children: ReactNode
+}) {
+  return (
+    <div
+      className={`flex overflow-hidden rounded-xl border bg-white transition-all duration-200 focus-within:border-[#1fb6e8] focus-within:ring-2 focus-within:ring-[#1fb6e8]/10 ${
+        hasError ? 'border-red-400 focus-within:border-red-400 focus-within:ring-red-400/10' : 'border-gray-200'
+      }`}
+    >
+      <div
+        className="flex w-11 shrink-0 items-center justify-center border-r border-gray-200 bg-gray-50 text-gray-400"
+        aria-hidden="true"
+      >
+        <Icon size={16} strokeWidth={1.75} />
+      </div>
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  )
 }
 
 function ErrorMsg({ msg }: { msg: string }) {
@@ -396,37 +424,41 @@ function ServiceQuoteForm() {
                   <label className={labelClass}>
                     Project Timeline <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={data.projectTimeline}
-                    onChange={(e) => update('projectTimeline', e.target.value)}
-                    className={selectClass(!!errors.projectTimeline)}
-                  >
-                    <option value="">Select timeline</option>
-                    <option value="asap">As soon as possible</option>
-                    <option value="1month">Within 1 month</option>
-                    <option value="3months">Within 3 months</option>
-                    <option value="6months">Within 6 months</option>
-                    <option value="flexible">Flexible / Planning phase</option>
-                  </select>
+                  <FormIconField icon={Clock} hasError={!!errors.projectTimeline}>
+                    <select
+                      value={data.projectTimeline}
+                      onChange={(e) => update('projectTimeline', e.target.value)}
+                      className={`${iconInnerClass} cursor-pointer appearance-none`}
+                    >
+                      <option value="">Select timeline</option>
+                      <option value="asap">As soon as possible</option>
+                      <option value="1month">Within 1 month</option>
+                      <option value="3months">Within 3 months</option>
+                      <option value="6months">Within 6 months</option>
+                      <option value="flexible">Flexible / Planning phase</option>
+                    </select>
+                  </FormIconField>
                   {errors.projectTimeline && <ErrorMsg msg={errors.projectTimeline} />}
                 </div>
                 <div>
                   <label className={labelClass}>
                     Estimated Budget <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={data.estimatedBudget}
-                    onChange={(e) => update('estimatedBudget', e.target.value)}
-                    className={selectClass(!!errors.estimatedBudget)}
-                  >
-                    <option value="">Select budget range</option>
-                    <option value="under5l">Under ₹5 Lakhs</option>
-                    <option value="5-15l">₹5 – ₹15 Lakhs</option>
-                    <option value="15-50l">₹15 – ₹50 Lakhs</option>
-                    <option value="50l-1cr">₹50 Lakhs – ₹1 Crore</option>
-                    <option value="above1cr">Above ₹1 Crore</option>
-                    <option value="discuss">Prefer to discuss</option>
-                  </select>
+                  <FormIconField icon={Wallet} hasError={!!errors.estimatedBudget}>
+                    <select
+                      value={data.estimatedBudget}
+                      onChange={(e) => update('estimatedBudget', e.target.value)}
+                      className={`${iconInnerClass} cursor-pointer appearance-none`}
+                    >
+                      <option value="">Select budget range</option>
+                      <option value="under5l">Under ₹5 Lakhs</option>
+                      <option value="5-15l">₹5 – ₹15 Lakhs</option>
+                      <option value="15-50l">₹15 – ₹50 Lakhs</option>
+                      <option value="50l-1cr">₹50 Lakhs – ₹1 Crore</option>
+                      <option value="above1cr">Above ₹1 Crore</option>
+                      <option value="discuss">Prefer to discuss</option>
+                    </select>
+                  </FormIconField>
                   {errors.estimatedBudget && <ErrorMsg msg={errors.estimatedBudget} />}
                 </div>
               </div>
@@ -440,24 +472,30 @@ function ServiceQuoteForm() {
                   <label className={labelClass}>
                     First Name <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={data.firstName}
-                    onChange={(e) => update('firstName', e.target.value)}
-                    className={inputClass(!!errors.firstName)}
-                  />
+                  <FormIconField icon={User} hasError={!!errors.firstName}>
+                    <input
+                      type="text"
+                      value={data.firstName}
+                      onChange={(e) => update('firstName', e.target.value)}
+                      className={iconInnerClass}
+                      placeholder="First name"
+                    />
+                  </FormIconField>
                   {errors.firstName && <ErrorMsg msg={errors.firstName} />}
                 </div>
                 <div>
                   <label className={labelClass}>
                     Last Name <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={data.lastName}
-                    onChange={(e) => update('lastName', e.target.value)}
-                    className={inputClass(!!errors.lastName)}
-                  />
+                  <FormIconField icon={User} hasError={!!errors.lastName}>
+                    <input
+                      type="text"
+                      value={data.lastName}
+                      onChange={(e) => update('lastName', e.target.value)}
+                      className={iconInnerClass}
+                      placeholder="Last name"
+                    />
+                  </FormIconField>
                   {errors.lastName && <ErrorMsg msg={errors.lastName} />}
                 </div>
               </div>
@@ -466,12 +504,15 @@ function ServiceQuoteForm() {
                 <label className={labelClass}>
                   Company Name <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
-                  value={data.companyName}
-                  onChange={(e) => update('companyName', e.target.value)}
-                  className={inputClass(!!errors.companyName)}
-                />
+                <FormIconField icon={Building2} hasError={!!errors.companyName}>
+                  <input
+                    type="text"
+                    value={data.companyName}
+                    onChange={(e) => update('companyName', e.target.value)}
+                    className={iconInnerClass}
+                    placeholder="Company name"
+                  />
+                </FormIconField>
                 {errors.companyName && <ErrorMsg msg={errors.companyName} />}
               </div>
 
@@ -480,37 +521,30 @@ function ServiceQuoteForm() {
                   <label className={labelClass}>
                     Email Address <span className="text-red-500">*</span>
                   </label>
-                  <div className="relative">
-                    <Mail
-                      size={15}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 "
-                    />
+                  <FormIconField icon={Mail} hasError={!!errors.companyEmail}>
                     <input
                       type="email"
                       value={data.companyEmail}
                       onChange={(e) => update('companyEmail', e.target.value)}
-                      className={`${inputClass(!!errors.companyEmail)} pl-10`}
+                      className={iconInnerClass}
+                      placeholder="you@company.com"
                     />
-                  </div>
+                  </FormIconField>
                   {errors.companyEmail && <ErrorMsg msg={errors.companyEmail} />}
                 </div>
                 <div>
                   <label className={labelClass}>
                     Phone Number <span className="text-red-500">*</span>
                   </label>
-                  <div className="relative">
-                    <Phone
-                      size={15}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
+                  <FormIconField icon={Phone} hasError={!!errors.phone}>
                     <input
                       type="tel"
                       placeholder="+91 XXXXX XXXXX"
                       value={data.phone}
                       onChange={(e) => update('phone', e.target.value)}
-                      className={`${inputClass(!!errors.phone)} pl-9`}
+                      className={iconInnerClass}
                     />
-                  </div>
+                  </FormIconField>
                   {errors.phone && <ErrorMsg msg={errors.phone} />}
                 </div>
               </div>
@@ -520,30 +554,35 @@ function ServiceQuoteForm() {
                   <label className={labelClass}>
                     Your Designation <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={data.designation}
-                    onChange={(e) => update('designation', e.target.value)}
-                    className={inputClass(!!errors.designation)}
-                  />
+                  <FormIconField icon={Briefcase} hasError={!!errors.designation}>
+                    <input
+                      type="text"
+                      value={data.designation}
+                      onChange={(e) => update('designation', e.target.value)}
+                      className={iconInnerClass}
+                      placeholder="Your role"
+                    />
+                  </FormIconField>
                   {errors.designation && <ErrorMsg msg={errors.designation} />}
                 </div>
                 <div>
                   <label className={labelClass}>
                     Company Size <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    value={data.companySize}
-                    onChange={(e) => update('companySize', e.target.value)}
-                    className={selectClass(!!errors.companySize)}
-                  >
-                    <option value="">Select company size</option>
-                    <option value="1-10">1–10 employees</option>
-                    <option value="11-50">11–50 employees</option>
-                    <option value="51-200">51–200 employees</option>
-                    <option value="201-500">201–500 employees</option>
-                    <option value="500+">500+ employees</option>
-                  </select>
+                  <FormIconField icon={Users} hasError={!!errors.companySize}>
+                    <select
+                      value={data.companySize}
+                      onChange={(e) => update('companySize', e.target.value)}
+                      className={`${iconInnerClass} cursor-pointer appearance-none`}
+                    >
+                      <option value="">Select company size</option>
+                      <option value="1-10">1–10 employees</option>
+                      <option value="11-50">11–50 employees</option>
+                      <option value="51-200">51–200 employees</option>
+                      <option value="201-500">201–500 employees</option>
+                      <option value="500+">500+ employees</option>
+                    </select>
+                  </FormIconField>
                   {errors.companySize && <ErrorMsg msg={errors.companySize} />}
                 </div>
               </div>
@@ -594,13 +633,15 @@ function ServiceQuoteForm() {
                   <label className={labelClass}>
                     Preferred Start Date <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="date"
-                    min={new Date().toISOString().split('T')[0]}
-                    value={data.preferredStartDate}
-                    onChange={(e) => update('preferredStartDate', e.target.value)}
-                    className={inputClass(!!errors.preferredStartDate)}
-                  />
+                  <FormIconField icon={Calendar} hasError={!!errors.preferredStartDate}>
+                    <input
+                      type="date"
+                      min={new Date().toISOString().split('T')[0]}
+                      value={data.preferredStartDate}
+                      onChange={(e) => update('preferredStartDate', e.target.value)}
+                      className={iconInnerClass}
+                    />
+                  </FormIconField>
                   {errors.preferredStartDate && <ErrorMsg msg={errors.preferredStartDate} />}
                 </div>
                 <div>
