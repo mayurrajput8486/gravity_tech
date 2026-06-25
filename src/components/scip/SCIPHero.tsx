@@ -1,14 +1,14 @@
-import TextRollButton from '../TextRollButton'
-import SCIPFloatingShapes from './SCIPFloatingShapes'
+import TextRollButton from "../TextRollButton";
+import SCIPFloatingShapes from "./SCIPFloatingShapes";
 
 const HERO_STATS = [
-  { value: '50+', label: 'Professionals Trained' },
-  { value: '95%', label: 'Placement Rate' },
-  { value: '4-6 Mo', label: 'Program Duration' },
-] as const
+  { value: "50+", label: "Professionals Trained" },
+  { value: "95%", label: "Placement Rate" },
+  { value: "4-6 Mo", label: "Program Duration" },
+] as const;
 
 interface SCIPHeroProps {
-  onApply: () => void
+  onApply: () => void;
 }
 
 function SCIPHero({ onApply }: SCIPHeroProps) {
@@ -26,7 +26,11 @@ function SCIPHero({ onApply }: SCIPHeroProps) {
           <div
             key={stat.label}
             className={`scip-float-stat scip-float-stat-delay-${i} rounded-xl border border-[#1fb6e8]/30 bg-[#0f0f0f]/70 px-5 py-3 backdrop-blur-sm ${
-              i === 1 ? 'scip-float-stat-delay-1' : i === 2 ? 'scip-float-stat-delay-2' : ''
+              i === 1
+                ? "scip-float-stat-delay-1"
+                : i === 2
+                  ? "scip-float-stat-delay-2"
+                  : ""
             }`}
           >
             <p className="text-xl font-bold text-white">{stat.value}</p>
@@ -52,13 +56,21 @@ function SCIPHero({ onApply }: SCIPHeroProps) {
         </h1>
 
         <p className="scip-hero-fade-in scip-hero-fade-in-delay-2 mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-          GravityTech&apos;s flagship talent development program. We hire driven individuals and put
-          them on live enterprise projects from week one.
+          GravityTech&apos;s flagship talent development program. We hire driven
+          individuals and put them on live enterprise projects from week one.
         </p>
 
         <div className="scip-hero-fade-in scip-hero-fade-in-delay-3 mt-8 flex flex-col gap-4 sm:mt-12 sm:flex-row sm:gap-5">
-          <TextRollButton label="Apply for SCIP →" onClick={onApply} variant="primary" />
-          <TextRollButton label="Back to Careers" href="/careers" variant="dark" />
+          <TextRollButton
+            label="Apply for SCIP →"
+            onClick={onApply}
+            variant="primary"
+          />
+          <TextRollButton
+            label="Back to Careers"
+            href="/careers"
+            variant="dark"
+          />
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3 lg:hidden">
@@ -74,7 +86,7 @@ function SCIPHero({ onApply }: SCIPHeroProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default SCIPHero
+export default SCIPHero;
