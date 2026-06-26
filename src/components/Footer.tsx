@@ -136,9 +136,7 @@ function Footer() {
                       className="mt-0.5 shrink-0 text-gray-600"
                     />
                     <p className="text-sm text-gray-500">
-                      LandMark - Dr. Ambedkar Chowk
-                      <br />
-                      Pune, Maharashtra, India
+                      LandMark - Dr. Ambedkar Chowk Pune, Maharashtra, India
                     </p>
                   </div>
                 </div>
