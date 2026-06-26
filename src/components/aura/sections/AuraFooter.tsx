@@ -1,4 +1,4 @@
-import { ChevronDown, Instagram, Linkedin, Mail, Phone } from 'lucide-react'
+import { ChevronDown, Facebook, Instagram, Linkedin, Mail, Phone } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -62,6 +62,13 @@ export function AuraFooter() {
               >
                 <Instagram className="h-4 w-4" />
               </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61590807268206"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:border-[#00d2ff] hover:text-[#00d2ff]"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
@@ -102,18 +109,18 @@ export function AuraFooter() {
                 e.preventDefault()
                 setEmail('')
               }}
-              className="flex gap-2"
+              className="flex flex-col gap-2 sm:flex-row"
             >
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-[#00d2ff]"
+                className="flex-1 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-[#00d2ff] min-w-0"
               />
               <button
                 type="submit"
-                className="rounded-lg bg-[#3D81E3] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#00d2ff]"
+                className="shrink-0 rounded-lg bg-[#3D81E3] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#00d2ff] sm:px-5"
               >
                 Subscribe
               </button>

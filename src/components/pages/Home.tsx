@@ -254,11 +254,11 @@ function Home() {
         </div>
       </section>
 
-      <AnimatedSection className="bg-[radial-gradient(circle,rgba(2,0,36,1)_0%,rgba(10,10,120,1)_100%)] px-8 py-24 sm:px-16">
+      <AnimatedSection className="bg-[radial-gradient(circle,rgba(2,0,36,1)_0%,rgba(10,10,120,1)_100%)] px-5 py-16 sm:px-8 sm:py-24 lg:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start">
             <h2 className="text-3xl font-semibold text-white sm:text-4xl">Why Choose Us</h2>
-            <div className="justify-self-end text-right">
+            <div className="lg:justify-self-end lg:text-right">
               <p className="max-w-md text-sm leading-relaxed text-gray-500">
                 GravityTech combines software engineering, AI integration, talent development, and
                 payroll — for scalable, reliable platforms.
@@ -383,7 +383,7 @@ function Home() {
         </div>
       </section>
 
-      <AnimatedSection className="bg-[#0f0f0f] px-8 py-24 sm:px-16">
+      <AnimatedSection className="bg-[#0f0f0f] px-5 py-16 sm:px-8 sm:py-24 lg:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-end">
             <h2 className="text-3xl font-semibold text-white sm:text-4xl">
@@ -443,7 +443,7 @@ function Home() {
       
 
       <AnimatedSection
-        className="px-8 py-24 sm:px-16"
+        className="px-5 py-16 sm:px-8 sm:py-24 lg:px-16"
         style={{ background: 'linear-gradient(135deg, #fce4f3 0%, #e8d5f5 40%, #f0d5a0 100%)' }}
       >
         <div className="mx-auto max-w-[1440px]">
@@ -459,7 +459,7 @@ function Home() {
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
-            <div className="relative min-h-[240px] rounded-3xl border border-white/60 bg-white/70 p-10 shadow-lg backdrop-blur-sm">
+            <div className="relative min-h-[220px] rounded-3xl border border-white/60 bg-white/70 p-6 shadow-lg backdrop-blur-sm sm:min-h-[240px] sm:p-10">
               <span className="pointer-events-none absolute left-8 top-6 select-none font-serif text-6xl leading-none text-gray-200">
                 "
               </span>
@@ -500,13 +500,13 @@ function Home() {
 
             <button
               onClick={() => setActiveIndex((i) => (i - 1 + testimonials.length) % testimonials.length)}
-              className="absolute left-0 top-1/2 hidden h-10 w-10 -translate-x-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md transition-colors duration-200 hover:bg-gray-50 sm:flex"
+              className="absolute left-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md transition-colors duration-200 hover:bg-gray-50 sm:flex"
             >
               <ChevronLeft size={16} className="text-gray-600" />
             </button>
             <button
               onClick={() => setActiveIndex((i) => (i + 1) % testimonials.length)}
-              className="absolute right-0 top-1/2 hidden h-10 w-10 -translate-y-1/2 translate-x-12 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md transition-colors duration-200 hover:bg-gray-50 sm:flex"
+              className="absolute right-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md transition-colors duration-200 hover:bg-gray-50 sm:flex"
             >
               <ChevronRight size={16} className="text-gray-600" />
             </button>
@@ -514,7 +514,7 @@ function Home() {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection className="bg-white px-8 py-20 sm:px-16">
+      <AnimatedSection className="bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-16">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-end">
             <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
@@ -565,7 +565,7 @@ function Home() {
       </AnimatedSection>
 
       <AnimatedSection
-        className="px-8 py-20 sm:px-16"
+        className="px-5 py-16 sm:px-8 sm:py-20 lg:px-16"
         style={{ background: 'linear-gradient(135deg, #0a3d5c 0%, #082c43 100%)' }}
       >
         <div className="mx-auto max-w-2xl text-center">

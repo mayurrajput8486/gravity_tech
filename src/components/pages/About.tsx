@@ -462,7 +462,7 @@ function About() {
             <p className="text-gray-500">Started with clean code. Still building.</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {TEAM_MEMBERS.map((member) => (
               <div key={member.name} className="overflow-hidden rounded-2xl bg-[#1a1a1a]">
                 <div className="relative aspect-square overflow-hidden">

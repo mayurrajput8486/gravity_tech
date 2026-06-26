@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Check, ChevronDown } from 'lucide-react'
 
 interface ScrollGatedModalProps {
@@ -82,19 +83,19 @@ export default function ScrollGatedModal({
 
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col rounded-3xl bg-white shadow-2xl animate-[modal-in_0.25s_ease]">
-        <div className="h-1 flex-shrink-0 overflow-hidden rounded-t-3xl bg-gray-100">
+      <div className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl animate-[modal-in_0.25s_ease]">
+        <div className="h-1 flex-shrink-0 bg-gray-100">
           <div
             className="h-full bg-[#1fb6e8] transition-all duration-150 ease-out"
             style={{ width: `${scrollProgress}%` }}
           />
         </div>
 
-        <div className="flex flex-shrink-0 items-start justify-between border-b border-gray-100 px-7 pb-4 pt-6">
+        <div className="flex flex-shrink-0 items-start justify-between border-b border-gray-100 px-5 pb-4 pt-5 sm:px-7 sm:pt-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
             <p className="mt-1 text-xs text-gray-400">Last updated: {lastUpdated}</p>
@@ -117,7 +118,7 @@ export default function ScrollGatedModal({
         <div
           ref={contentRef}
           onScroll={handleScroll}
-          className="relative flex-1 overflow-y-auto px-7 py-6 prose prose-sm prose-gray max-w-none [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5"
+          className="relative flex-1 overflow-y-auto px-5 py-6 sm:px-7 prose prose-sm prose-gray max-w-none [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar]:w-1.5"
         >
           {children}
 
@@ -130,7 +131,7 @@ export default function ScrollGatedModal({
           )}
         </div>
 
-        <div className="flex flex-shrink-0 items-center justify-between gap-4 border-t border-gray-100 px-7 py-5">
+        <div className="flex flex-shrink-0 flex-col items-stretch gap-3 border-t border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-7 sm:py-5">
           <p className="text-xs text-gray-400">
             {hasReachedBottom ? (
               <span className="flex items-center gap-1.5 font-medium text-green-600">
@@ -160,6 +161,7 @@ export default function ScrollGatedModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

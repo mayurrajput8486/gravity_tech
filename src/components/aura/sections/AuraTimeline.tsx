@@ -23,7 +23,7 @@ export function AuraTimeline() {
         </p>
       </motion.div>
 
-      <div className="hidden gap-6 md:grid md:grid-cols-5">
+      <div className="hidden gap-6 lg:grid lg:grid-cols-5">
         {SCIP_PHASES.map((phase, i) => {
           const Icon = phase.icon
           return (
@@ -58,7 +58,7 @@ export function AuraTimeline() {
         })}
       </div>
 
-      <div className="space-y-4 md:hidden">
+      <div className="space-y-4 lg:hidden">
         {SCIP_PHASES.map((phase, i) => {
           const Icon = phase.icon
           return (

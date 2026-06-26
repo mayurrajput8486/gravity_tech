@@ -57,7 +57,7 @@ function ServiceDetailLayout({ content }: ServiceDetailLayoutProps) {
         </div>
       </PageHero>
 
-      <section className="bg-white px-8 py-24">
+      <section className="bg-white px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-16 lg:grid-cols-2">
           <div>
             <h2 className="mb-8 text-3xl font-semibold text-gray-900 sm:text-4xl">What We Deliver</h2>
@@ -78,7 +78,7 @@ function ServiceDetailLayout({ content }: ServiceDetailLayoutProps) {
         </div>
       </section>
 
-      <section className="bg-gray-50 px-8 py-24">
+      <section className="bg-gray-50 px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-[1440px]">
           <span className="mb-4 inline-block rounded-full border border-[#1fb6e8]/30 bg-[#1fb6e8]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#1fb6e8]">
             Process
@@ -101,7 +101,7 @@ function ServiceDetailLayout({ content }: ServiceDetailLayoutProps) {
         </div>
       </section>
 
-      <section className="bg-[#0f0f0f] px-8 py-24">
+      <section className="bg-[#0f0f0f] px-5 py-16 sm:px-8 sm:py-24">
         <div className="mx-auto max-w-[1440px]">
           <h2 className="mb-12 text-3xl font-semibold text-white sm:text-4xl">
             Why GravityTech for {content.serviceName}
@@ -126,7 +126,7 @@ function ServiceDetailLayout({ content }: ServiceDetailLayoutProps) {
         </div>
       </section>
 
-      <section className="bg-gradient-to-r from-[#1fb6e8] to-[#0ea5e9] px-8 py-16 text-center">
+      <section className="bg-gradient-to-r from-[#1fb6e8] to-[#0ea5e9] px-5 py-12 text-center sm:px-8 sm:py-16">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-6 text-3xl font-semibold text-white sm:text-4xl">{content.ctaTitle}</h2>
           <TextRollButton label="Get a Quote →" href="/services#quote-form" variant="white" />

@@ -99,7 +99,7 @@ function Navbar() {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-5 py-4 sm:px-8">
+      <header className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-5 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
         <Link to="/" className={`${capsuleClass} flex items-center gap-2.5 px-4 py-2.5`}>
           {/* <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-900 text-xs font-bold text-white">
             GT
@@ -107,7 +107,7 @@ function Navbar() {
           
           <span className={`hidden text-sm font-semibold sm:block ${logoTextClass}`}>GravityTech</span> */}
           <div>
-            <img src="/GravityTech_navbar.svg" alt="GravityTech Software" width="125px"/>
+            <img src="/GravityTech_navbar.svg" alt="GravityTech Software" className="h-auto w-full max-w-[110px] sm:max-w-[125px]" />
           </div>
         </Link>
 
@@ -195,12 +195,23 @@ function Navbar() {
         />
 
         <div
-          className={`absolute inset-x-3 bottom-3 rounded-2xl bg-white p-6 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          className={`absolute inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] rounded-2xl bg-white p-6 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] ${
             isMenuOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-600">
-            <span>{indiaTime} IST</span>
+          <div className="mb-8 flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-600">
+              <Clock size={13} className="text-gray-500" />
+              <span>{indiaTime} IST</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200 hover:text-gray-900"
+              aria-label="Close menu"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
           </div>
 
           <nav className="mb-8 flex flex-col gap-4">

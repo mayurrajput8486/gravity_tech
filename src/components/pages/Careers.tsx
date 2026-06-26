@@ -124,8 +124,8 @@ function Careers() {
             </div>
           </div>
 
-          <div className="relative mb-16 flex items-start">
-            <div className="absolute left-[16.67%] right-[16.67%] top-6 hidden h-px bg-gradient-to-r from-[#1fb6e8] via-[#7c3aed] to-[#1fb6e8] opacity-30 sm:block" />
+          <div className="relative mb-16 flex flex-col gap-10 sm:flex-row sm:items-start">
+            <div className="absolute left-[16.67%] right-[16.67%] top-6 hidden h-px bg-gradient-to-r from-[#1fb6e8] via-[#7c3aed] to-[#1fb6e8] opacity-30 lg:block" />
 
             {SCIP_STEPS.map((step, index) => {
               const Icon = step.icon;
@@ -185,8 +185,8 @@ function Careers() {
             <span className="block text-[#1fb6e8]">you apply?</span>
           </h2>
 
-          <div className="relative mt-12 flex flex-col gap-8 sm:flex-row sm:gap-0">
-            <div className="absolute left-[12.5%] right-[12.5%] top-6 hidden h-px bg-gradient-to-r from-[#1fb6e8]/30 via-[#7c3aed]/30 to-[#1fb6e8]/30 sm:block" />
+          <div className="relative mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="absolute left-[12.5%] right-[12.5%] top-6 hidden h-px bg-gradient-to-r from-[#1fb6e8]/30 via-[#7c3aed]/30 to-[#1fb6e8]/30 lg:block" />
             {[
               {
                 title: "Application Review",
@@ -617,8 +617,8 @@ function Careers() {
                     {role.description}
                   </p>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center overflow-hidden rounded-full bg-gray-900 transition-all duration-300 ease-in-out group-hover:w-[130px]">
-                      <span className="min-w-0 flex-1 whitespace-nowrap pl-4 text-xs font-medium text-white opacity-0 transition-opacity delay-100 duration-200 group-hover:opacity-100">
+                    <div className="flex h-9 w-[7.5rem] items-center overflow-hidden rounded-full bg-gray-900 transition-all duration-300 ease-in-out sm:w-9 sm:group-hover:w-[130px]">
+                      <span className="min-w-0 flex-1 whitespace-nowrap pl-4 text-xs font-medium text-white opacity-100 transition-opacity delay-100 duration-200 sm:opacity-0 sm:group-hover:opacity-100">
                         Apply now
                       </span>
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center">

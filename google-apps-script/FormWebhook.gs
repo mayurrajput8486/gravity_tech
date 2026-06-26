@@ -1,18 +1,18 @@
 /**
  * GravityTech — Form submissions → Google Sheets + Google Drive
  *
- * SETUP:
- * 1. Create a Google Sheet with 4 tabs (exact names below)
- * 2. Extensions → Apps Script → paste this file
- * 3. Set DRIVE_FOLDER_ID to a Google Drive folder ID for resume uploads
- * 4. Run setupSheetHeaders() once from the editor
- * 5. Deploy → New deployment → Web app
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 6. Copy the Web App URL into your site .env as VITE_GOOGLE_SHEETS_URL
+ * SETUP: see google-apps-script/SETUP.md
  */
 
-/** Paste your Google Drive folder ID for resume/CV uploads (optional but recommended) */
+/** GravityTech form responses spreadsheet */
+var SPREADSHEET_ID = '1TqszJPQQf2ZjrcuaR3Ae9_cB04uFB6QYaREvYAWRwAA'
+
+/**
+ * Google Drive folder for resume/CV uploads.
+ * 1. In Drive, create a folder (e.g. "GravityTech Resumes")
+ * 2. Open it — URL looks like: drive.google.com/drive/folders/FOLDER_ID_HERE
+ * 3. Paste that FOLDER_ID_HERE below
+ */
 var DRIVE_FOLDER_ID = 'YOUR_DRIVE_FOLDER_ID_HERE'
 
 var SHEETS = {
@@ -28,7 +28,7 @@ function doPost(e) {
     var formType = payload.formType
     var data = payload.data || {}
     var file = payload.file
-    var ss = SpreadsheetApp.getActiveSpreadsheet()
+    var ss = getSpreadsheet_()
     var resumeUrl = ''
 
     if (file && file.base64 && file.name) {
@@ -119,7 +119,7 @@ function doGet() {
 
 /** Run once from Apps Script editor to create headers on each tab */
 function setupSheetHeaders() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet()
+  var ss = getSpreadsheet_()
 
   setHeaders_(ss, SHEETS.business_enquiry, [
     'Submitted At',
@@ -179,6 +179,10 @@ function setupSheetHeaders() {
     'Project Link',
     'Why SCIP',
   ])
+}
+
+function getSpreadsheet_() {
+  return SpreadsheetApp.openById(SPREADSHEET_ID)
 }
 
 function appendRow_(ss, sheetName, row) {

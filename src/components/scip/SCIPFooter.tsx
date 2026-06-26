@@ -1,4 +1,4 @@
-import { ChevronDown, Instagram, Linkedin, Mail, Phone } from 'lucide-react'
+import { ChevronDown, Facebook, Instagram, Linkedin, Mail, Phone } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -33,11 +33,11 @@ function SCIPFooter() {
                 className="flex items-center gap-2 transition-colors hover:text-[#1fb6e8]"
               >
                 <Mail size={16} />
-                admissions@gravitech.com
+               career@gravitytech.co.in
               </a>
               <p className="flex items-center gap-2">
                 <Phone size={16} />
-                +91 98765 43210
+                +91 8308409189
               </p>
             </div>
 
@@ -55,6 +55,13 @@ function SCIPFooter() {
                 aria-label="Instagram"
               >
                 <Instagram size={16} />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61590807268206"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-700 text-gray-400 transition-colors hover:border-[#1fb6e8] hover:text-[#1fb6e8]"
+                aria-label="Facebook"
+              >
+                <Facebook size={16} />
               </a>
             </div>
           </div>

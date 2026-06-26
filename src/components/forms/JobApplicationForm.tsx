@@ -16,11 +16,11 @@ import {
   User,
   X,
 } from 'lucide-react'
-import { useEffect, useRef, useState, type FormEvent, type UIEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TermsModal from '../modals/TermsModal'
 import PrivacyModal from '../modals/PrivacyModal'
-import { SCIP_TERMS_SECTIONS } from '../../constants/scipTerms'
+import SCIPTermsModal from '../modals/SCIPTermsModal'
 import { submitJobApplication } from '../../lib/submissions'
 import { isGoogleSheetsConfigured } from '../../lib/googleSheets'
 
@@ -88,10 +88,6 @@ function darkSelectClass(hasError: boolean) {
   return `${darkInputClass(hasError)} cursor-pointer appearance-none`
 }
 
-function darkTextareaClass(hasError: boolean) {
-  return `${darkInputClass(hasError)} resize-none`
-}
-
 function DarkErrorMsg({ msg }: { msg: string }) {
   return (
     <p className="mt-1.5 flex items-center gap-1.5 text-xs text-red-400">
@@ -123,8 +119,8 @@ function validateApplicationForm(
     errors.email = 'Please enter a valid email address'
 
   if (!data.phone.trim()) errors.phone = 'Phone number is required'
-  else if (!/^[+]?[\d\s\-()]{8,15}$/.test(data.phone.trim()))
-    errors.phone = 'Enter a valid phone number'
+  else if (!/^\d{10}$/.test(data.phone.trim()))
+    errors.phone = 'Enter a valid 10-digit mobile number'
 
   if (!data.city.trim()) errors.city = 'Your city is required'
 
@@ -143,11 +139,6 @@ function validateApplicationForm(
   if (data.linkedinUrl && !data.linkedinUrl.includes('linkedin.com/in/'))
     errors.linkedinUrl = 'Enter a valid LinkedIn profile URL'
 
-  if (!data.whyGravityTech.trim())
-    errors.whyGravityTech = 'Please tell us why you want to join GravityTech'
-  else if (data.whyGravityTech.trim().length < 80)
-    errors.whyGravityTech = `Add a bit more (${80 - data.whyGravityTech.trim().length} more characters)`
-
   if (!agreeToTerms)
     errors.agreeToTerms = hasReadTerms
       ? 'Please check the box to agree to Terms & Conditions'
@@ -161,7 +152,7 @@ function validateApplicationForm(
   if (isScipApplication && !agreeToScip)
     errors.agreeToScip = hasReadScip
       ? 'Please check the box to agree to the SCIP Program Terms & Conditions'
-      : 'Please scroll through and read the SCIP Program terms first'
+      : 'Please open and read the SCIP Program Terms & Conditions first'
 
   return errors
 }
@@ -186,25 +177,11 @@ function JobApplicationForm({ preselectedRole = '', lockRole = false }: JobAppli
   const [hasReadScip, setHasReadScip] = useState(false)
   const [termsModalOpen, setTermsModalOpen] = useState(false)
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
+  const [scipModalOpen, setScipModalOpen] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const scipTermsRef = useRef<HTMLDivElement>(null)
 
   const isScipApplication = data.roleApplying === 'SCIP Program'
-
-  const handleScipTermsScroll = (event: UIEvent<HTMLDivElement>) => {
-    if (hasReadScip) return
-    const el = event.currentTarget
-    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24
-    if (atBottom) setHasReadScip(true)
-  }
-
-  useEffect(() => {
-    if (!isScipApplication) return
-    const el = scipTermsRef.current
-    if (!el || hasReadScip) return
-    if (el.scrollHeight <= el.clientHeight + 1) setHasReadScip(true)
-  }, [isScipApplication, hasReadScip])
 
   useEffect(() => {
     if (preselectedRole) {
@@ -416,9 +393,13 @@ function JobApplicationForm({ preselectedRole = '', lockRole = false }: JobAppli
               />
               <input
                 type="tel"
-                placeholder="+91 XXXXX XXXXX"
+                inputMode="numeric"
+                maxLength={10}
+                placeholder="10-digit mobile number"
                 value={data.phone}
-                onChange={(e) => update('phone', e.target.value)}
+                onChange={(e) =>
+                  update('phone', e.target.value.replace(/\D/g, '').slice(0, 10))
+                }
                 className={`${darkInputClass(!!errors.phone)} pl-9`}
               />
             </div>
@@ -698,82 +679,55 @@ function JobApplicationForm({ preselectedRole = '', lockRole = false }: JobAppli
       <div className="mb-8">
         <label className={darkLabelClass}>
           Why do you want to join GravityTech?
-          <span className="ml-1 text-red-400">*</span>
-          <span className="ml-1 text-xs font-normal text-gray-500">(minimum 80 characters)</span>
+          <span className="ml-1 text-xs font-normal text-gray-500">(optional)</span>
         </label>
         <textarea
           rows={4}
           value={data.whyGravityTech}
           onChange={(e) => update('whyGravityTech', e.target.value)}
-          className={darkTextareaClass(!!errors.whyGravityTech)}
+          className={`${darkInputClass(false)} resize-y`}
         />
-        <div className="mt-1 flex justify-between">
-          {errors.whyGravityTech ? <DarkErrorMsg msg={errors.whyGravityTech} /> : <span />}
-          <span
-            className={`text-xs ${
-              data.whyGravityTech.length >= 80 ? 'text-green-500' : 'text-gray-600'
-            }`}
-          >
-            {data.whyGravityTech.length}/80 min
-          </span>
-        </div>
       </div>
 
       {isScipApplication && (
-        <>
-          <div id="scip-terms" className="mb-6">
-            <p className={darkLabelClass}>SCIP Terms & Conditions</p>
-            <div
-              ref={scipTermsRef}
-              onScroll={handleScipTermsScroll}
-              className="max-h-56 overflow-y-auto rounded-xl border border-gray-700 bg-[#111] p-5 text-sm leading-relaxed text-gray-400"
+        <div className="mb-8">
+          <label className="flex items-start gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (!hasReadScip) setScipModalOpen(true)
+                else setAgreeToScip((v) => !v)
+              }}
+              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
+                agreeToScip
+                  ? 'border-[#1fb6e8] bg-[#1fb6e8]'
+                  : hasReadScip
+                    ? 'cursor-pointer border-gray-600 hover:border-gray-500'
+                    : 'cursor-pointer border-gray-600 bg-[#111]'
+              }`}
             >
-              <div className="space-y-4">
-                {SCIP_TERMS_SECTIONS.map((section) => (
-                  <div key={section.title}>
-                    <h3 className="mb-1.5 text-sm font-semibold text-white">{section.title}</h3>
-                    <p>{section.content}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 border-t border-gray-800 pt-4 text-xs text-gray-500">
-                By checking the box below, you confirm that you have read, understood, and agree to
-                be bound by the SCIP Program terms outlined above.
-              </p>
-            </div>
-            {!hasReadScip && (
-              <p className="mt-2 text-xs text-amber-400">
-                Scroll to the bottom of the terms to enable the agreement checkbox.
-              </p>
-            )}
-          </div>
-
-          <div className="mb-8">
-            <label className="flex items-start gap-3">
+              {agreeToScip && <Check size={11} className="text-white" strokeWidth={3} />}
+            </button>
+            <span className="text-sm leading-relaxed text-gray-400">
+              I agree to the{' '}
               <button
                 type="button"
-                onClick={() => {
-                  if (!hasReadScip) return
-                  setAgreeToScip((v) => !v)
-                }}
-                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all duration-200 ${
-                  agreeToScip
-                    ? 'border-[#1fb6e8] bg-[#1fb6e8]'
-                    : hasReadScip
-                      ? 'cursor-pointer border-gray-600 hover:border-gray-500'
-                      : 'cursor-not-allowed border-gray-700 bg-[#111] opacity-50'
-                }`}
+                onClick={() => setScipModalOpen(true)}
+                className="inline-flex items-center gap-1 font-medium text-[#1fb6e8] underline underline-offset-2 hover:text-[#0da8da]"
               >
-                {agreeToScip && <Check size={11} className="text-white" strokeWidth={3} />}
+                SCIP Program Terms & Conditions
+                <ExternalLink size={11} />
               </button>
-              <span className="text-sm leading-relaxed text-gray-400">
-                I have read and agree to the SCIP Program Terms & Conditions{' '}
-                <span className="text-red-400">*</span>
-              </span>
-            </label>
-            {errors.agreeToScip && <DarkErrorMsg msg={errors.agreeToScip} />}
-          </div>
-        </>
+              <span className="text-red-400"> *</span>
+              {!hasReadScip && (
+                <span className="mt-1 block text-xs text-amber-400">
+                  Please open and read the full document to enable this checkbox
+                </span>
+              )}
+            </span>
+          </label>
+          {errors.agreeToScip && <DarkErrorMsg msg={errors.agreeToScip} />}
+        </div>
       )}
 
       <div className="mb-8 space-y-3">
@@ -903,6 +857,14 @@ function JobApplicationForm({ preselectedRole = '', lockRole = false }: JobAppli
           setAgreeToPrivacy(true)
         }}
         onFullyRead={() => setHasReadPrivacy(true)}
+      />
+      <SCIPTermsModal
+        isOpen={scipModalOpen}
+        onClose={() => {
+          setScipModalOpen(false)
+          setAgreeToScip(true)
+        }}
+        onFullyRead={() => setHasReadScip(true)}
       />
     </form>
   )

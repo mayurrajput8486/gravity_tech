@@ -18,12 +18,12 @@ function ExpandHoverButton({
 
   return (
     <div
-      className={`absolute bottom-4 left-4 flex h-9 w-9 items-center overflow-hidden rounded-full transition-all duration-300 ease-in-out ${widthClass} ${
+      className={`absolute bottom-4 left-4 flex h-9 w-[9.5rem] items-center overflow-hidden rounded-full transition-all duration-300 ease-in-out sm:w-9 ${widthClass} ${
         isLight ? 'bg-white' : 'bg-gray-900'
       }`}
     >
       <span
-        className={`min-w-0 flex-1 whitespace-nowrap pl-4 text-[13px] font-medium opacity-0 transition-opacity delay-100 duration-300 group-hover:opacity-100 ${
+        className={`min-w-0 flex-1 whitespace-nowrap pl-4 text-[13px] font-medium opacity-100 transition-opacity delay-100 duration-300 sm:opacity-0 sm:group-hover:opacity-100 ${
           isLight ? 'text-gray-900' : 'text-white'
         }`}
       >

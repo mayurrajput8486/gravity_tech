@@ -11,6 +11,7 @@ import TalentAcquisitionPage from './pages/services/TalentAcquisitionPage'
 import EnterpriseSolutionsPage from './pages/services/EnterpriseSolutionsPage'
 import ThirdPartyPayrollPage from './pages/services/ThirdPartyPayrollPage'
 import SCIPPage from './pages/careers/SCIPPage'
+import LegalPage from './components/pages/LegalPage'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -57,6 +58,7 @@ function AppShell() {
         <Route path="/services/third-party-payroll" element={<ThirdPartyPayrollPage />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/scip" element={<SCIPPage />} />
+        <Route path="/privacy-policy" element={<LegalPage />} />
       </Routes>
       {!isScipPage && <Footer />}
     </>

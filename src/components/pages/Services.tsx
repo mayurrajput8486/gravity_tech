@@ -227,7 +227,7 @@ function Services() {
       </section>
 
       <div
-        className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${
+        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] right-[max(1.5rem,env(safe-area-inset-right))] z-40 transition-all duration-300 ${
           showStickyBtn ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'
         }`}
       >

@@ -48,7 +48,7 @@ export function AuraTestimonials() {
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
             transition={{ duration: 0.4 }}
-            className="liquid-glass min-h-[320px] rounded-2xl border border-white/10 p-8"
+            className="liquid-glass min-h-[280px] rounded-2xl border border-white/10 p-5 sm:min-h-[320px] sm:p-8"
           >
             <div className="mb-6 flex items-center gap-4">
               <img
@@ -91,7 +91,7 @@ export function AuraTestimonials() {
           onClick={() =>
             setActiveIndex((i) => (i - 1 + SCIP_TESTIMONIALS.length) % SCIP_TESTIMONIALS.length)
           }
-          className="absolute left-0 top-1/2 flex h-10 w-10 -translate-x-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:bg-white/10"
+          className="absolute left-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:bg-white/10 sm:flex"
           aria-label="Previous testimonial"
         >
           <ChevronLeft className="h-4 w-4 text-white/70" />
@@ -99,7 +99,7 @@ export function AuraTestimonials() {
         <button
           type="button"
           onClick={() => setActiveIndex((i) => (i + 1) % SCIP_TESTIMONIALS.length)}
-          className="absolute right-0 top-1/2 flex h-10 w-10 -translate-y-1/2 translate-x-12 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:bg-white/10"
+          className="absolute right-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:bg-white/10 sm:flex"
           aria-label="Next testimonial"
         >
           <ChevronRight className="h-4 w-4 text-white/70" />

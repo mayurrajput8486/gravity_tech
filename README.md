@@ -44,9 +44,15 @@ src/
 
 All site forms save to **Google Sheets** (one tab per form type). Job application **resumes** are uploaded to **Google Drive**.
 
-### 1. Create the Google Sheet
+### 1. Google Sheet
 
-Create a spreadsheet with **4 tabs** (exact names):
+Production spreadsheet:
+
+https://docs.google.com/spreadsheets/d/1TqszJPQQf2ZjrcuaR3Ae9_cB04uFB6QYaREvYAWRwAA/edit
+
+Full setup steps: **`google-apps-script/SETUP.md`**
+
+The spreadsheet needs **4 tabs** (exact names; `setupSheetHeaders()` creates them):
 
 | Tab name | Form |
 |----------|------|
