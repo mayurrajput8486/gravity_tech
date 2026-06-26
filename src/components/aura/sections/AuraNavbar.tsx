@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuraButton } from '../shared/AuraButton'
-import { LogoMark } from '../shared/LogoMark'
 
 const NAV_LINKS = [
   { label: 'Home', to: '/' },
@@ -36,8 +35,12 @@ export function AuraNavbar({ onApply }: AuraNavbarProps) {
         className="relative z-50 mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6"
         aria-label="SCIP navigation"
       >
-        <Link to="/" className="flex min-w-0 items-center gap-2 text-white">
-          <LogoMark className="h-8 w-8 shrink-0" />
+        <Link to="/" className="flex min-w-0 items-center gap-2.5 text-white">
+          <img
+            src="/favicon.svg"
+            alt="GravityTech Software"
+            className="h-9 w-9 shrink-0 rounded-full"
+          />
           <span className="truncate text-sm font-semibold">GravityTech</span>
         </Link>
 
