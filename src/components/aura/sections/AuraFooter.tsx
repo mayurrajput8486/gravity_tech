@@ -49,9 +49,10 @@ export function AuraFooter() {
             </div>
             <div className="mt-6 flex gap-3">
               <a
-                href="#"
+                href="https://www.linkedin.com/company/134914021/"
                 className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-white/50 transition-colors hover:border-[#00d2ff] hover:text-[#00d2ff]"
                 aria-label="LinkedIn"
+                
               >
                 <Linkedin className="h-4 w-4" />
               </a>
