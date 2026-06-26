@@ -1,5 +1,6 @@
 import { Calendar, Download } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
+import { Link } from 'react-router-dom'
 import { AuraButton } from '../shared/AuraButton'
 
 interface AuraCTAProps {
@@ -33,13 +34,13 @@ export function AuraCTA({ onApply }: AuraCTAProps) {
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <AuraButton label="Apply for SCIP" onClick={onApply} />
-          <a
-            href="#"
+          <Link
+            to="/careers/scip/brochure"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white transition-all hover:bg-white/5"
           >
             <Download className="h-4 w-4" />
             Download Brochure
-          </a>
+          </Link>
           <a
             href="mailto:admissions@gravitech.com"
             className="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-3 text-sm font-medium text-white/80 transition-all hover:bg-white/5"

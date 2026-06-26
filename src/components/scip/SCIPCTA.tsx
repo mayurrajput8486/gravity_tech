@@ -56,7 +56,7 @@ function SCIPCTA({ onApply }: SCIPCTAProps) {
         <p className="mt-8 text-xs text-gray-500">
           Questions? Email us at{' '}
           <a href="mailto:admissions@gravitech.com" className="text-[#1fb6e8] hover:underline">
-            admissions@gravitech.com
+           career@gravitytech.co.in
           </a>
         </p>
       </div>

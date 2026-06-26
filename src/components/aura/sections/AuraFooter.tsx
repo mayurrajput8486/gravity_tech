@@ -92,6 +92,11 @@ export function AuraFooter() {
                 </Link>
               </li>
               <li>
+                <Link to="/careers/scip/brochure" className="hover:text-[#00d2ff]">
+                  Download Brochure
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="hover:text-[#00d2ff]">
                   About GravityTech
                 </Link>
